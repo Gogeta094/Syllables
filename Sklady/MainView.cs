@@ -32,7 +32,8 @@ namespace Sklady
             analyzer.OnWordAnalyzed += Analyzer_OnWordAnalyzed;
             analyzer.OnErrorOccured += Analyzer_OnErrorOccured;
             var result = analyzer.GetResults();
-            Settings.AnalyzeResults = result;                 
+            Settings.AnalyzeResults = result;
+            Settings.AnalyzedCvvResults = analyzer.SyllablesWithTechnicalSymbols;
         }
 
         private void Analyzer_OnErrorOccured(Exception arg1, string arg2)

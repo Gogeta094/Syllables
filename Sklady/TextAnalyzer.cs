@@ -14,7 +14,7 @@ namespace Sklady
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
 
-        public string[] SyllablesWithTechnicalSymbols { get; private set; }
+        public List<AnalyzeResults> SyllablesWithTechnicalSymbols { get; private set; }
 
         public event Action<int, int> OnWordAnalyzed;
         public event Action<Exception, string> OnErrorOccured;
@@ -22,6 +22,7 @@ namespace Sklady
         public TextAnalyzer(string text)
         {
             _wordAnalyzer = new WordAnalyzer();
+            SyllablesWithTechnicalSymbols = new List<AnalyzeResults>();
             PrepareText(text);
         }
 
@@ -48,7 +49,6 @@ namespace Sklady
 
 
 
-
         public List<AnalyzeResults> GetResults()
         {
             var result = new List<AnalyzeResults>();
@@ -63,7 +63,12 @@ namespace Sklady
                 try
                 {
                     var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
-                    SyllablesWithTechnicalSymbols = RemoveApos(syllables);
+                    SyllablesWithTechnicalSymbols.Add(new AnalyzeResults()
+                    {
+                        Word = _words[i],
+                        Syllables = RemoveApos(syllables)
+                    }); 
+
                     syllables = syllables.Select(c => RemoveTechnicalCharacters(c)).ToArray();
                     syllables = ProcessAp(syllables);
                     
