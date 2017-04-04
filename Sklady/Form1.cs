@@ -114,10 +114,14 @@ namespace Sklady
 
         private List<AnalyzeResults> ConvertToCvv(List<AnalyzeResults> anResults)
         {            
+
             foreach (var resultitem in anResults)
             {
                 for (var i = 0; i < resultitem.Syllables.Length; i++)
                 {
+                    var list = resultitem.Syllables[i].ToList();
+                    list.RemoveAll(c => charsTable.GetPower(c) == 0);
+                    resultitem.Syllables[i] = new string(list.ToArray());
                     resultitem.Syllables[i] = new string(resultitem.Syllables[i].Select(s => charsTable.isConsonant(s) ? 'c' : 'v').ToArray());
                 }
             }

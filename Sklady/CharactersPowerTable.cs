@@ -49,7 +49,7 @@ namespace Sklady
 
         public int GetPower(char character)
         {
-            return GetConsonantsTable().Single(c => c.CharacterValue == character).Power;
+            return GetConsonantsTable().Union(_vowel).Single(c => c.CharacterValue == character).Power;
         }
 
         public List<Character> GetConsonants()

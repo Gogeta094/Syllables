@@ -120,10 +120,7 @@ namespace Sklady
                 }
             }
 
-            for (var i = 0; i < syllabeles.Length; i++)
-            {
-                syllabeles[i] = syllabeles[i].Replace("'", "");
-            }
+            syllabeles = RemoveApos(syllabeles);            
 
             return syllabeles;
         }
