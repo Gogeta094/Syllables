@@ -33,7 +33,7 @@ namespace Sklady
             analyzer.OnErrorOccured += Analyzer_OnErrorOccured;
             var result = analyzer.GetResults();
             Settings.AnalyzeResults = result;
-            Settings.AnalyzedCvvResults = analyzer.SyllablesWithTechnicalSymbols;
+            Settings.AnalyzedCvvResults = analyzer.ResultCVV;
         }
 
         private void Analyzer_OnErrorOccured(Exception arg1, string arg2)

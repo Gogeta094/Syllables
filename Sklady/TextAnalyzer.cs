@@ -14,7 +14,7 @@ namespace Sklady
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
 
-        public List<AnalyzeResults> SyllablesWithTechnicalSymbols { get; private set; }
+        public List<AnalyzeResults> ResultCVV { get; private set; }
 
         public event Action<int, int> OnWordAnalyzed;
         public event Action<Exception, string> OnErrorOccured;
@@ -22,7 +22,7 @@ namespace Sklady
         public TextAnalyzer(string text)
         {
             _wordAnalyzer = new WordAnalyzer();
-            SyllablesWithTechnicalSymbols = new List<AnalyzeResults>();
+            ResultCVV = new List<AnalyzeResults>();
             PrepareText(text);
         }
 
@@ -47,8 +47,6 @@ namespace Sklady
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words
         }
 
-
-
         public List<AnalyzeResults> GetResults()
         {
             var result = new List<AnalyzeResults>();
@@ -63,14 +61,14 @@ namespace Sklady
                 try
                 {
                     var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
-                    SyllablesWithTechnicalSymbols.Add(new AnalyzeResults()
+                    ResultCVV.Add(new AnalyzeResults()
                     {
                         Word = _words[i],
                         Syllables = RemoveApos(syllables)
                     }); 
 
                     syllables = syllables.Select(c => RemoveTechnicalCharacters(c)).ToArray();
-                    syllables = ProcessAp(syllables);
+                    syllables = ProcessApos(syllables);
                     
                     result.Add(new AnalyzeResults()
                     {
@@ -95,7 +93,7 @@ namespace Sklady
             return result;
         }
 
-        private string[] ProcessAp(string[] syllabeles)
+        private string[] ProcessApos(string[] syllabeles)
         {
             for (var i = 0; i < syllabeles.Length - 1; i++)
             {
@@ -116,7 +114,7 @@ namespace Sklady
                     if (syllabeles[i + 1].StartsWith("йе"))
                     {
                         syllabeles[i + 1] = syllabeles[i + 1].Replace("йа", "є");
-                    }                    
+                    }
                 }
             }
 
@@ -151,7 +149,6 @@ namespace Sklady
                 {
                     break;
                 }
-
 
                 if (!table.isConsonant(word[indexOfV - 1]) && table.isConsonant(word[indexOfV + 1]))
                 {
@@ -209,27 +206,29 @@ namespace Sklady
                     break;
                 }
 
-                var nextChar = word[nextCharIndex];
-
-                word = word.Remove(nextCharIndex, 1);
+                var nextChar = word[nextCharIndex];               
 
                 if (nextChar == 'я')
                 {
+                    word = word.Remove(nextCharIndex, 1);
                     word = word.Insert(nextCharIndex, "йа");
                 }
                 if (nextChar == 'ю')
                 {
+                    word = word.Remove(nextCharIndex, 1);
                     word = word.Insert(nextCharIndex, "йу");
                 }
                 if (nextChar == 'є')
                 {
+                    word = word.Remove(nextCharIndex, 1);
                     word = word.Insert(nextCharIndex, "йе");
                 }
-
                 if (nextChar == 'ї')
                 {
+                    word = word.Remove(nextCharIndex, 1);
                     word = word.Insert(nextCharIndex, "йі");
                 }
+
                 indexOfAp = word.IndexOf(symbol, indexOfAp + 1);
             }
 

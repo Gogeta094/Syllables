@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sklady.Export;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,9 +16,10 @@ namespace Sklady
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();    
         }
-        private CharactersTable charsTable = CharactersTable.Instance;
+
+        private IResultsExport _export = ExportResults.Instance;
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -46,89 +48,31 @@ namespace Sklady
 
         private void SaveSyllables(List<AnalyzeResults> analyzeResults, string selectedPath)
         {
-            var sb = new StringBuilder();
-            var anResults = analyzeResults.Select(r => r).ToList();
+            var res = _export.GetSyllables(analyzeResults);
 
-            for (var i = 0; i < anResults.Count; i++)
-            {
-                sb.Append(String.Join(Settings.SyllableSeparator, anResults[i].Syllables) + " ");
-            }
-
-            File.WriteAllText(Path.Combine(selectedPath, "Syllables.txt"), sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "Syllables.txt"), res, Encoding.UTF8);
         }
 
         private void SaveFirst(List<AnalyzeResults> analyzeResults, string selectedPath)
         {
-            var sb = new StringBuilder();
-            var anResults = analyzeResults.Select(r => r).ToList();
-           
-            anResults = TakeOnlyFirstSyllable(anResults);
+            var res = _export.GetFirstSyllables(analyzeResults);
 
-            for (var i = 0; i < anResults.Count; i++)
-            {
-                sb.Append(String.Join(Settings.SyllableSeparator, anResults[i].Syllables) + " ");
-            }
-
-            File.WriteAllText(Path.Combine(selectedPath, "FirstSyllables.txt"), sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "FirstSyllables.txt"), res, Encoding.UTF8);
         }
 
         private void SaveCVV(List<AnalyzeResults> analyzeResults, string selectedPath)
         {
-            var sb = new StringBuilder();
-            var anResults = analyzeResults.Select(r => new AnalyzeResults() { Syllables = r.Syllables.Select(s => (string)s.Clone()).ToArray() }).ToList();
+            var res = _export.GetSyllablesCVV(analyzeResults);
 
-            anResults = ConvertToCvv(anResults);
-
-            for (var i = 0; i < anResults.Count; i++)
-            {
-                sb.Append(String.Join(Settings.SyllableSeparator, anResults[i].Syllables) + " ");
-            }
-
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesCVV.txt"), sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "SyllablesCVV.txt"), res, Encoding.UTF8);
         }
 
         private void SaveFirstCVV(List<AnalyzeResults> analyzeResults, string selectedPath)
         {
-            var sb = new StringBuilder();
-            var anResults = analyzeResults.Select(r => new AnalyzeResults() { Syllables = r.Syllables.Select(s => (string)s.Clone()).ToArray() }).ToList();
+            var res = _export.GetSyllablesFirstCVV(analyzeResults);
 
-            anResults = TakeOnlyFirstSyllable(anResults);
-            anResults = ConvertToCvv(anResults);
-
-            for (var i = 0; i < anResults.Count; i++)
-            {
-                sb.Append(String.Join(Settings.SyllableSeparator, anResults[i].Syllables) + " ");
-            }
-
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesFirstCVV.txt"), sb.ToString(), Encoding.UTF8);
-        }  
-
-        private List<AnalyzeResults> TakeOnlyFirstSyllable(List<AnalyzeResults> anResults)
-        {
-            return anResults.Select(c => new AnalyzeResults()
-            {
-                Word = c.Word,
-                Syllables = new string[] { c.Syllables.First() }
-            }).ToList();
+            File.WriteAllText(Path.Combine(selectedPath, "SyllablesFirstCVV.txt"), res, Encoding.UTF8);
         }
-
-        private List<AnalyzeResults> ConvertToCvv(List<AnalyzeResults> anResults)
-        {            
-
-            foreach (var resultitem in anResults)
-            {
-                for (var i = 0; i < resultitem.Syllables.Length; i++)
-                {
-                    var list = resultitem.Syllables[i].ToList();
-                    list.RemoveAll(c => charsTable.GetPower(c) == 0);
-                    resultitem.Syllables[i] = new string(list.ToArray());
-                    resultitem.Syllables[i] = new string(resultitem.Syllables[i].Select(s => charsTable.isConsonant(s) ? 'c' : 'v').ToArray());
-                }
-            }
-
-            return anResults;
-        }
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -152,6 +96,11 @@ namespace Sklady
         {
             var form = new CharactersBase();
             form.ShowDialog();
+        }
+
+        private void mainView1_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }
