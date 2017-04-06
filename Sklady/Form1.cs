@@ -31,16 +31,10 @@ namespace Sklady
         private IResultsExport _export = ExportResults.Instance;
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //var dialog = new OpenFileDialog();
-
-            //dialog.Filter = "Text Files (*.txt;*.doc;)" + "All files (*.*)|*.*";
-
-            //if (dialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    Settings.Text = File.ReadAllText(dialog.FileName, Encoding.UTF8);                
-            //}
+        {           
             var dialog = new FolderBrowserDialog();
+            dialog.SelectedPath = Settings.LastOpenFolderPath;
+            dialog.Description = "Open folder with text files.";            
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -61,11 +55,15 @@ namespace Sklady
 
                 mainView1.InputData = texts;
             }
+
+            Settings.LastOpenFolderPath = dialog.SelectedPath;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var folderDialog = new FolderBrowserDialog();
+            folderDialog.Description = "Save results to folder.";
+            folderDialog.SelectedPath = Settings.LastSaveFolderPath;
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
@@ -79,6 +77,8 @@ namespace Sklady
                     SaveFirstCVV(fileResult.SyllablesFirstCVV, directoryPath);
                 }
             }
+
+            Settings.LastSaveFolderPath = folderDialog.SelectedPath;
         }
 
         private void SaveSyllables(string result, string selectedPath)
