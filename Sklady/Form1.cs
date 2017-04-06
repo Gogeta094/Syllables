@@ -71,35 +71,21 @@ namespace Sklady
                 {
                     var directoryPath = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, fileResult.FileName)).FullName;
 
-                    SaveSyllables(fileResult.Syllables, directoryPath);
-                    SaveFirst(fileResult.FirstSyllables, directoryPath);
-                    SaveCVV(fileResult.SyllablesCVV, directoryPath);
-                    SaveFirstCVV(fileResult.SyllablesFirstCVV, directoryPath);
+                    SaveFile(fileResult.Syllables, directoryPath, "Syllables.txt");
+                    SaveFile(fileResult.FirstSyllables, directoryPath, "FirstSyllables.txt");
+                    SaveFile(fileResult.SyllablesCVV, directoryPath, "SyllablesCVV.txt");
+                    SaveFile(fileResult.SyllablesFirstCVV, directoryPath, "SyllablesFirstCVV.txt");
                 }
             }
 
             Settings.LastSaveFolderPath = folderDialog.SelectedPath;
         }
 
-        private void SaveSyllables(string result, string selectedPath)
+        private void SaveFile(string result, string path, string fileName)
         {
-            File.WriteAllText(Path.Combine(selectedPath, "Syllables.txt"), result, Encoding.UTF8);
-        }
-
-        private void SaveFirst(string result, string selectedPath)
-        {
-            File.WriteAllText(Path.Combine(selectedPath, "FirstSyllables.txt"), result, Encoding.UTF8);
-        }
-
-        private void SaveCVV(string result, string selectedPath)
-        {
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesCVV.txt"), result, Encoding.UTF8);
-        }
-
-        private void SaveFirstCVV(string result, string selectedPath)
-        {
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesFirstCVV.txt"), result, Encoding.UTF8);
-        }
+            var fullPath = Path.Combine(path, fileName);
+            File.WriteAllText(fullPath, result, Encoding.UTF8);
+        }        
 
         private void Form1_Load(object sender, EventArgs e)
         {
