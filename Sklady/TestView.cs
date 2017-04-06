@@ -23,7 +23,7 @@ namespace Sklady
 
             var text = richTextBox1.Text;
 
-            var analyzer = new TextAnalyzer(richTextBox1.Text);
+            var analyzer = new TextAnalyzer(richTextBox1.Text, "");
 
             var result = analyzer.GetResults();
 

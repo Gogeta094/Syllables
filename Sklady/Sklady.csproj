@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="CharactersPowerTable.cs" />
     <Compile Include="Export\ExportResults.cs" />
+    <Compile Include="Export\FileExportResults.cs" />
     <Compile Include="Export\IResultsExport.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -88,7 +89,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ICharactersPowerTable.cs" />
+    <Compile Include="InputFileModel.cs" />
     <Compile Include="Languages.cs" />
     <Compile Include="MainView.cs">
       <SubType>UserControl</SubType>

@@ -16,69 +16,94 @@ namespace Sklady
     {
         public Form1()
         {
-            InitializeComponent();    
+            InitializeComponent();
+            mainView1.OnFilesProcessed += MainView1_OnFilesProcessed1;
+        }
+
+        private List<FileExportResults> _exportResults;
+
+        private void MainView1_OnFilesProcessed1(List<FileExportResults> result)
+        {
+            _exportResults = result;
+            saveToolStripMenuItem.Enabled = result.Any();
         }
 
         private IResultsExport _export = ExportResults.Instance;
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog();
-           
-            dialog.Filter = "Text Files (*.txt;*.doc;)" + "All files (*.*)|*.*";
+            //var dialog = new OpenFileDialog();
+
+            //dialog.Filter = "Text Files (*.txt;*.doc;)" + "All files (*.*)|*.*";
+
+            //if (dialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    Settings.Text = File.ReadAllText(dialog.FileName, Encoding.UTF8);                
+            //}
+            var dialog = new FolderBrowserDialog();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Settings.Text = File.ReadAllText(dialog.FileName, Encoding.UTF8);                
+                var path = dialog.SelectedPath;
+                var di = new DirectoryInfo(path);
+
+                var files = di.GetFiles("*.txt");
+
+                var texts = new List<InputFileModel>();
+                foreach (var file in files)
+                {
+                    texts.Add(new InputFileModel()
+                    {
+                        FileName = file.Name,
+                        Text = File.ReadAllText(file.FullName, Encoding.UTF8)
+                    });
+                }
+
+                mainView1.InputData = texts;
             }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {        
+        {
             var folderDialog = new FolderBrowserDialog();
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
-                SaveSyllables(Settings.AnalyzeResults, folderDialog.SelectedPath);
-                SaveFirst(Settings.AnalyzeResults, folderDialog.SelectedPath);
-                SaveCVV(Settings.AnalyzedCvvResults, folderDialog.SelectedPath);
-                SaveFirstCVV(Settings.AnalyzedCvvResults, folderDialog.SelectedPath);
+                foreach (var fileResult in _exportResults)
+                {
+                    var directoryPath = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, fileResult.FileName)).FullName;
+
+                    SaveSyllables(fileResult.Syllables, directoryPath);
+                    SaveFirst(fileResult.FirstSyllables, directoryPath);
+                    SaveCVV(fileResult.SyllablesCVV, directoryPath);
+                    SaveFirstCVV(fileResult.SyllablesFirstCVV, directoryPath);
+                }
             }
         }
 
-        private void SaveSyllables(List<AnalyzeResults> analyzeResults, string selectedPath)
+        private void SaveSyllables(string result, string selectedPath)
         {
-            var res = _export.GetSyllables(analyzeResults);
-
-            File.WriteAllText(Path.Combine(selectedPath, "Syllables.txt"), res, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "Syllables.txt"), result, Encoding.UTF8);
         }
 
-        private void SaveFirst(List<AnalyzeResults> analyzeResults, string selectedPath)
+        private void SaveFirst(string result, string selectedPath)
         {
-            var res = _export.GetFirstSyllables(analyzeResults);
-
-            File.WriteAllText(Path.Combine(selectedPath, "FirstSyllables.txt"), res, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "FirstSyllables.txt"), result, Encoding.UTF8);
         }
 
-        private void SaveCVV(List<AnalyzeResults> analyzeResults, string selectedPath)
+        private void SaveCVV(string result, string selectedPath)
         {
-            var res = _export.GetSyllablesCVV(analyzeResults);
-
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesCVV.txt"), res, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "SyllablesCVV.txt"), result, Encoding.UTF8);
         }
 
-        private void SaveFirstCVV(List<AnalyzeResults> analyzeResults, string selectedPath)
+        private void SaveFirstCVV(string result, string selectedPath)
         {
-            var res = _export.GetSyllablesFirstCVV(analyzeResults);
-
-            File.WriteAllText(Path.Combine(selectedPath, "SyllablesFirstCVV.txt"), res, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(selectedPath, "SyllablesFirstCVV.txt"), result, Encoding.UTF8);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            saveToolStripMenuItem.Enabled = false;
-
-            Settings.OnResultChanged += (newValue) => saveToolStripMenuItem.Enabled = newValue != null && newValue.Count > 0;
+            saveToolStripMenuItem.Enabled = false;            
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -100,7 +125,7 @@ namespace Sklady
 
         private void mainView1_Load(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

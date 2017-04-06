@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Sklady
-{
+{   
+
     public class AnalyzeResults
     {
         public string Word { get; set; }
 
-        public string[] Syllables { get; set; } 
+        public string[] Syllables { get; set; }
     }
 }

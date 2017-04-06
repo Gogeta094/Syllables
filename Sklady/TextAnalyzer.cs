@@ -10,20 +10,23 @@ namespace Sklady
     public class TextAnalyzer
     {
         private string _text;
-        private string[] _words;
+        private string[] _words;       
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
 
         public List<AnalyzeResults> ResultCVV { get; private set; }
 
+        public string FileName { get; private set; }
+
         public event Action<int, int> OnWordAnalyzed;
         public event Action<Exception, string> OnErrorOccured;
 
-        public TextAnalyzer(string text)
+        public TextAnalyzer(string text, string fileName)
         {
+            FileName = fileName;
             _wordAnalyzer = new WordAnalyzer();
             ResultCVV = new List<AnalyzeResults>();
-            PrepareText(text);
+            PrepareText(text);            
         }
 
         private void PrepareText(string inputText)
