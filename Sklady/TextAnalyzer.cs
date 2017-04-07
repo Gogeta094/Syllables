@@ -40,7 +40,7 @@ namespace Sklady
             _text = sb.ToString();
             _text = Regex.Replace(_text, "([0-9][а-яА-Я])", "");//Remove chapter number (for vk)
             _text = Regex.Replace(_text, "[a-zA-Z]|[0-9]", "");
-            _text = Regex.Replace(_text, @"/\t|\n|\r\	", " "); // remove new line, tabulation and other literals
+            _text = Regex.Replace(_text, @"/\t|\n|\r", " "); // remove new line, tabulation and other literals
             //_text = _text.Replace("ъ", "");
 
             _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
