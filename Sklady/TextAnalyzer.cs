@@ -18,8 +18,8 @@ namespace Sklady
 
         public string FileName { get; private set; }
 
-        public event Action<int, int> OnWordAnalyzed;
-        public event Action<Exception, string> OnErrorOccured;
+        public event Action<int, int, string> OnWordAnalyzed;
+        public event Action<Exception, string, string> OnErrorOccured;
 
         public TextAnalyzer(string text, string fileName)
         {
@@ -40,7 +40,7 @@ namespace Sklady
             _text = sb.ToString();
             _text = Regex.Replace(_text, "([0-9][а-яА-Я])", "");//Remove chapter number (for vk)
             _text = Regex.Replace(_text, "[a-zA-Z]|[0-9]", "");
-            _text = Regex.Replace(_text, @"/\t|\n|\r", " "); // remove new line, tabulation and other literals
+            _text = Regex.Replace(_text, @"/\t|\n|\r\	", " "); // remove new line, tabulation and other literals
             //_text = _text.Replace("ъ", "");
 
             _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
@@ -81,14 +81,14 @@ namespace Sklady
 
                     if (OnWordAnalyzed != null)
                     {
-                        OnWordAnalyzed(i, _words.Length - 1);
+                        OnWordAnalyzed(i, _words.Length - 1, FileName);
                     }
                 }
                 catch (Exception ex)
                 {
                     if (OnErrorOccured != null)
                     {
-                        OnErrorOccured(ex, _words[i]);
+                        OnErrorOccured(ex, _words[i], FileName);
                     }
                 }
             }
