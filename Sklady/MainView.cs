@@ -20,6 +20,7 @@ namespace Sklady
         }
 
         public event Action<List<FileExportResults>> OnFilesProcessed;
+        private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
         private ExportResults _export = ExportResults.Instance;
@@ -34,7 +35,7 @@ namespace Sklady
             set
             {
                 _inputData = value;
-                OnInputDataChanged();                
+                OnInputDataChanged();
             }
         }
 
@@ -49,7 +50,7 @@ namespace Sklady
             {
                 MessageBox.Show("No text file selected.");
                 return;
-            }            
+            }
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
@@ -63,23 +64,29 @@ namespace Sklady
 
             var exportResults = new List<FileExportResults>();
 
-            Parallel.ForEach(analyzers, textAnalyzer =>
+            var task = Task.Factory.StartNew(() =>
             {
-                var res = textAnalyzer.GetResults();
-                var cvv = textAnalyzer.ResultCVV;
 
-                exportResults.Add(new FileExportResults()
+
+                Parallel.ForEach(analyzers, textAnalyzer =>
                 {
-                    Syllables = _export.GetSyllables(res),
-                    FirstSyllables = _export.GetFirstSyllables(res),
-                    SyllablesCVV = _export.GetSyllablesCVV(cvv),
-                    SyllablesFirstCVV = _export.GetSyllablesFirstCVV(cvv),
-                    FileName = textAnalyzer.FileName
-                });
-            });
+                    var res = textAnalyzer.GetResults();
+                    var cvv = textAnalyzer.ResultCVV;
 
-            if (OnFilesProcessed != null)
-                OnFilesProcessed(exportResults);
+                    exportResults.Add(new FileExportResults()
+                    {
+                        Syllables = _export.GetSyllables(res),
+                        FirstSyllables = _export.GetFirstSyllables(res),
+                        SyllablesCVV = _export.GetSyllablesCVV(cvv),
+                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(cvv),
+                        FileName = textAnalyzer.FileName
+                    });
+                });
+
+                if (OnFilesProcessed != null)
+                    OnFilesProcessed(exportResults);
+
+            });            
         }
 
         private void CreateProgressBars()
@@ -97,7 +104,7 @@ namespace Sklady
 
                 var progressBar = new ProgressBar();
                 progressBar.Top = i * 30;
-                progressBar.Left = 150;
+                progressBar.Left = 170;
                 progressBar.Height = 15;
                 progressBar.Name = item.FileName + "pb";
 
@@ -130,14 +137,14 @@ namespace Sklady
 
         private void UpdateProgressBar(int current, int total, ProgressBar progressBar)
         {
-            if (current % 1000 != 0)
+            if (current % UPDATE_UI_EVERY_N_ITEMS != 0 && total - current > UPDATE_UI_EVERY_N_ITEMS)
             {
                 return;
             }
 
             if (progressBar.InvokeRequired)
             {
-                progressBar.BeginInvoke((MethodInvoker)delegate ()
+                progressBar.Invoke((MethodInvoker)delegate ()
                 {
                     progressBar.Maximum = total;
                     progressBar.Value = current;

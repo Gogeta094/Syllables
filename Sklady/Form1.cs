@@ -25,16 +25,16 @@ namespace Sklady
         private void MainView1_OnFilesProcessed1(List<FileExportResults> result)
         {
             _exportResults = result;
-            saveToolStripMenuItem.Enabled = result.Any();
+            UpdateSaveButton(result);
         }
 
         private IResultsExport _export = ExportResults.Instance;
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {           
+        {
             var dialog = new FolderBrowserDialog();
             dialog.SelectedPath = Settings.LastOpenFolderPath;
-            dialog.Description = "Open folder with text files.";            
+            dialog.Description = "Open folder with text files.";
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -85,11 +85,11 @@ namespace Sklady
         {
             var fullPath = Path.Combine(path, fileName);
             File.WriteAllText(fullPath, result, Encoding.UTF8);
-        }        
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            saveToolStripMenuItem.Enabled = false;            
+            saveToolStripMenuItem.Enabled = false;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,6 +107,21 @@ namespace Sklady
         {
             var form = new CharactersBase();
             form.ShowDialog();
+        }
+
+        private void UpdateSaveButton(List<FileExportResults> results)
+        {
+            if (menuStrip1.InvokeRequired)
+            {
+                menuStrip1.Invoke((MethodInvoker)delegate ()
+               {
+                   saveToolStripMenuItem.Enabled = results.Any();
+               });
+            }
+            else
+            {
+                saveToolStripMenuItem.Enabled = results.Any();
+            }
         }
 
         private void mainView1_Load(object sender, EventArgs e)
