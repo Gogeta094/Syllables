@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Sklady.Export;
 
 namespace Sklady
 {
@@ -21,16 +22,17 @@ namespace Sklady
         {
             richTextBox2.Clear();
 
+            var export = ExportResults.Instance;
             var text = richTextBox1.Text;
-
             var analyzer = new TextAnalyzer(richTextBox1.Text, "");
 
             var result = analyzer.GetResults();
+            var resText = export.GetSyllables(result);
+            richTextBox2.Text = resText;
 
-            foreach (var item in result)
-            {
-                richTextBox2.Text += " " + String.Join("-", item.Syllables);
-            }
+            var cvv = analyzer.ResultCVV;
+            var resCVV = export.GetSyllablesCVV(cvv);
+            richTextBox3.Text = resCVV;
         }
     }
 }

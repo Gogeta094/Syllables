@@ -66,8 +66,6 @@ namespace Sklady
 
             var task = Task.Factory.StartNew(() =>
             {
-
-
                 Parallel.ForEach(analyzers, textAnalyzer =>
                 {
                     var res = textAnalyzer.GetResults();
@@ -127,7 +125,7 @@ namespace Sklady
                 richTextBox1.Text += String.Format("{0} Error occured processing next word - {1}\n", file, word);
             }
         }
-
+        
         private void Analyzer_OnWordAnalyzed(int current, int total, string fileName)
         {
             var progressBar = (ProgressBar)panel1.Controls.Find(fileName + "pb", false).First();

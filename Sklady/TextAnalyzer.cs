@@ -63,65 +63,53 @@ namespace Sklady
             {
                 try
                 {
-                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
-                    ResultCVV.Add(new AnalyzeResults()
-                    {
-                        Word = _words[i],
-                        Syllables = RemoveApos(syllables)
-                    }); 
+                    _words[i] = PhoneticReplace(_words[i]);
+                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
 
-                    syllables = syllables.Select(c => RemoveTechnicalCharacters(c)).ToArray();
-                    syllables = ProcessApos(syllables);
-                    
-                    result.Add(new AnalyzeResults()
-                    {
-                        Word = _words[i],
-                        Syllables = syllables
-                    });
+                    UpdateCVVResultSet(syllables, _words[i]);
+                    UpdateReadableViewSet(syllables, _words[i], result);
 
-                    if (OnWordAnalyzed != null)
-                    {
-                        OnWordAnalyzed(i, _words.Length - 1, FileName);
-                    }
+                    OnWordAnalyzed?.Invoke(i, _words.Length - 1, FileName);
                 }
                 catch (Exception ex)
                 {
-                    if (OnErrorOccured != null)
-                    {
-                        OnErrorOccured(ex, _words[i], FileName);
-                    }
+                    OnErrorOccured?.Invoke(ex, _words[i], FileName);
                 }
             }
 
             return result;
         }
 
-        private string[] ProcessApos(string[] syllabeles)
+        private void UpdateCVVResultSet(string[] syllables, string word)
+        {     
+            ResultCVV.Add(new AnalyzeResults()
+            {
+                Word = word,
+                Syllables = RemoveApos(syllables)
+            });
+        }
+
+        private void UpdateReadableViewSet(string[] syllables, string word, List<AnalyzeResults> result)
+        {
+            syllables = syllables.Select(c => RemoveTechnicalCharacters(c)).ToArray();
+            syllables = ReplacePhonetics(syllables);          
+
+            result.Add(new AnalyzeResults()
+            {
+                Word = word,
+                Syllables = syllables
+            });
+        }
+
+        private string[] ReplacePhonetics(string[] syllabeles)
         {
             for (var i = 0; i < syllabeles.Length - 1; i++)
-            {
-                if (syllabeles[i].EndsWith("'") || syllabeles[i].EndsWith("ъ"))
-                {
-                    if (syllabeles[i + 1].StartsWith("йа"))
-                    {
-                        syllabeles[i + 1] = syllabeles[i + 1].Replace("йа", "я");
-                    }
-                    if (syllabeles[i + 1].StartsWith("йу"))
-                    {
-                        syllabeles[i + 1] = syllabeles[i + 1].Replace("йа", "ю");
-                    }
-                    if (syllabeles[i + 1].StartsWith("йі"))
-                    {
-                        syllabeles[i + 1] = syllabeles[i + 1].Replace("йа", "ї");
-                    }
-                    if (syllabeles[i + 1].StartsWith("йе"))
-                    {
-                        syllabeles[i + 1] = syllabeles[i + 1].Replace("йа", "є");
-                    }
-                }
-            }
-
-            syllabeles = RemoveApos(syllabeles);            
+            {       
+                syllabeles[i] = syllabeles[i].Replace("йа", "я");
+                syllabeles[i] = syllabeles[i].Replace("йу", "ю");
+                syllabeles[i] = syllabeles[i].Replace("йі", "ї");
+                syllabeles[i] = syllabeles[i].Replace("йе", "є");
+            }           
 
             return syllabeles;
         }
@@ -135,6 +123,32 @@ namespace Sklady
             }
 
             return result;
+        }
+
+        private string PhoneticReplace(string word)
+        {
+            word = ReplacePhoneticCharacter('ю', "йу", word);
+            word = ReplacePhoneticCharacter('я', "йа", word);
+            word = ReplacePhoneticCharacter('є', "йе", word);
+            word = ReplacePhoneticCharacter('ї', "йі", word);
+
+            return word;
+        }
+
+        private string ReplacePhoneticCharacter(char charToReplace, string replacementText, string word)
+        {
+            var indexofChar = word.IndexOf(charToReplace);            
+
+            while (indexofChar != -1)
+            {
+                if (indexofChar == 0 || !table.isConsonant(word[indexofChar - 1]))
+                {
+                    word = word.Remove(indexofChar, 1).Insert(indexofChar, replacementText);
+                }
+                indexofChar = word.IndexOf(charToReplace, indexofChar + 1);
+            }
+
+            return word;
         }
 
         private string AnalyzeNonStableCharacters(string word)
