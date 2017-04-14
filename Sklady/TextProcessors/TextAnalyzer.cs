@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sklady.TextProcessors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Sklady
         private string[] _words;       
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
+        private PhoneticProcessor _phoneticProcessor = new PhoneticProcessor();
 
         public List<AnalyzeResults> ResultCVV { get; private set; }
 
@@ -56,15 +58,14 @@ namespace Sklady
 
             for (var i = 0; i < _words.Length; i++)
             {
-                _words[i] = AnalyzeNonStableCharacters(_words[i]); // Replace some chars according to their power
+                _words[i] = _phoneticProcessor.Process(_words[i]); // Replace some chars according to their power
             }
 
             for (var i = 0; i < _words.Length; i++)
             {
                 try
                 {
-                    _words[i] = PhoneticReplace(_words[i]);
-                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
+                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
 
                     UpdateCVVResultSet(syllables, _words[i]);
                     UpdateReadableViewSet(syllables, _words[i], result);
@@ -90,9 +91,8 @@ namespace Sklady
         }
 
         private void UpdateReadableViewSet(string[] syllables, string word, List<AnalyzeResults> result)
-        {
-            syllables = syllables.Select(c => RemoveTechnicalCharacters(c)).ToArray();
-            syllables = ReplacePhonetics(syllables);          
+        {        
+            syllables = UnprocessPhonetics(syllables);          
 
             result.Add(new AnalyzeResults()
             {
@@ -101,15 +101,12 @@ namespace Sklady
             });
         }
 
-        private string[] ReplacePhonetics(string[] syllabeles)
+        private string[] UnprocessPhonetics(string[] syllabeles)
         {
-            for (var i = 0; i < syllabeles.Length - 1; i++)
-            {       
-                syllabeles[i] = syllabeles[i].Replace("йа", "я");
-                syllabeles[i] = syllabeles[i].Replace("йу", "ю");
-                syllabeles[i] = syllabeles[i].Replace("йі", "ї");
-                syllabeles[i] = syllabeles[i].Replace("йе", "є");
-            }           
+            for (var i = 0; i < syllabeles.Length; i++)
+            {
+                syllabeles[i] = _phoneticProcessor.Unprocess(syllabeles[i]);
+            }
 
             return syllabeles;
         }
@@ -123,148 +120,6 @@ namespace Sklady
             }
 
             return result;
-        }
-
-        private string PhoneticReplace(string word)
-        {
-            word = ReplacePhoneticCharacter('ю', "йу", word);
-            word = ReplacePhoneticCharacter('я', "йа", word);
-            word = ReplacePhoneticCharacter('є', "йе", word);
-            word = ReplacePhoneticCharacter('ї', "йі", word);
-
-            return word;
-        }
-
-        private string ReplacePhoneticCharacter(char charToReplace, string replacementText, string word)
-        {
-            var indexofChar = word.IndexOf(charToReplace);            
-
-            while (indexofChar != -1)
-            {
-                if (indexofChar == 0 || !table.isConsonant(word[indexofChar - 1]))
-                {
-                    word = word.Remove(indexofChar, 1).Insert(indexofChar, replacementText);
-                }
-                indexofChar = word.IndexOf(charToReplace, indexofChar + 1);
-            }
-
-            return word;
-        }
-
-        private string AnalyzeNonStableCharacters(string word)
-        {
-            var indexOfV = word.IndexOf('в');
-
-            while (indexOfV != -1)
-            {
-                if (indexOfV == 0)
-                {
-                    indexOfV = word.IndexOf('в', indexOfV + 1);
-                    continue;
-                }
-                if (indexOfV == word.Length - 1 || indexOfV == word.Length)
-                {
-                    break;
-                }
-
-                if (!table.isConsonant(word[indexOfV - 1]) && table.isConsonant(word[indexOfV + 1]))
-                {
-                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
-                }
-                else if (table.isConsonant(word[indexOfV - 1]) && !table.isConsonant(word[indexOfV + 1]))
-                {
-                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "w");
-                }
-
-                indexOfV = word.IndexOf('в', indexOfV + 1);
-            }
-
-            var indexOfJ = word.IndexOf('й');
-
-            while (indexOfJ != -1)
-            {
-                if (indexOfJ == 0)
-                {
-                    indexOfJ = word.IndexOf('й', indexOfJ + 1);
-                    continue;
-                }
-
-                if (indexOfJ == word.Length - 1 || indexOfJ == word.Length)
-                {
-                    break;
-                }
-
-
-                if (!table.isConsonant(word[indexOfJ - 1]) && table.isConsonant(word[indexOfJ + 1]))
-                {
-                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
-                }
-
-                indexOfJ = word.IndexOf('й', indexOfJ + 1);
-            }
-
-            word = word.Replace("дж", "d").Replace("дз", "z");
-
-            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos
-            word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
-
-            return word;
-        }
-
-        private string ReplaceNextNonStableChar(string symbol, string word)
-        {
-            var indexOfAp = word.IndexOf(symbol);
-
-            while (indexOfAp != -1)
-            {
-                var nextCharIndex = indexOfAp + 1;
-                if (nextCharIndex > word.Length - 1)
-                {
-                    break;
-                }
-
-                var nextChar = word[nextCharIndex];               
-
-                if (nextChar == 'я')
-                {
-                    word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йа");
-                }
-                if (nextChar == 'ю')
-                {
-                    word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йу");
-                }
-                if (nextChar == 'є')
-                {
-                    word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йе");
-                }
-                if (nextChar == 'ї')
-                {
-                    word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йі");
-                }
-
-                indexOfAp = word.IndexOf(symbol, indexOfAp + 1);
-            }
-
-            return word;
-        }
-
-        private string RemoveTechnicalCharacters(string word)
-        {
-            return new StringBuilder(word)
-                .Replace('w', 'в')
-                .Replace('u', 'в')
-                .Replace('j', 'й')
-                .Replace("d", "дж")
-                .Replace("z", "дз")
-                //.Replace("\'йа", "я")
-                //.Replace("\'йу", "ю")
-                //.Replace("\'йе", "є")
-                //.Replace("\'йі", "ї")
-                .ToString();
-        }
+        }      
     }
 }
