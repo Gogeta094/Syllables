@@ -75,7 +75,7 @@ namespace Sklady
 
         private void btnAddVowel_Click(object sender, EventArgs e)
         {
-            char character = ' ';           
+            char character = ' ';
 
             try
             {
