@@ -28,7 +28,7 @@ namespace Sklady
             FileName = fileName;
             _wordAnalyzer = new WordAnalyzer();
             ResultCVV = new List<AnalyzeResults>();
-            PrepareText(text);            
+            PrepareText(text);             
         }
 
         private void PrepareText(string inputText)

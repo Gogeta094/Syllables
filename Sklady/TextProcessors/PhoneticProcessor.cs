@@ -39,6 +39,7 @@ namespace Sklady.TextProcessors
             else if (Settings.Language == Languages.Russian)
             {
                 res = res.Replace("йе", "ё");
+                res = res.Replace("йи", "и");
             }
 
             return res;
@@ -50,8 +51,14 @@ namespace Sklady.TextProcessors
             input = ReplacePhoneticCharacter('я', "йа", input);
             input = ReplacePhoneticCharacter('є', "йе", input);
             input = ReplacePhoneticCharacter('ї', "йі", input);
-            input = ReplacePhoneticCharacter('щ', "шч", input);
-            input = ReplacePhoneticCharacter('ё', "йе", input);
+            input = ReplacePhoneticCharacter('щ', "шч", input);            
+
+            if (Settings.Language == Languages.Russian)
+            {
+                input = ReplacePhoneticCharacter('ё', "йе", input);
+                input = ReplacePhoneticCharacter('и', "йи", input);
+            }
+                
 
             return input;
         }

@@ -62,6 +62,8 @@ namespace Sklady
                 analyzers.Add(textAnalyzer);
             }
 
+            progressBar1.Maximum = InputData.Count;
+
             var exportResults = new List<FileExportResults>();
 
             var task = Task.Factory.StartNew(() =>
@@ -79,12 +81,29 @@ namespace Sklady
                         SyllablesFirstCVV = _export.GetSyllablesFirstCVV(cvv),
                         FileName = textAnalyzer.FileName
                     });
+
+                    OnFileProcessed();
                 });
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResults);
 
             });            
+        }
+
+        private void OnFileProcessed()
+        {
+            if (progressBar1.InvokeRequired)
+            {
+                progressBar1.Invoke((MethodInvoker)delegate ()
+                {
+                    progressBar1.Value += 1;
+                });
+            }
+            else
+            {
+                progressBar1.Value += 1;
+            }
         }
 
         private void CreateProgressBars()
@@ -95,13 +114,13 @@ namespace Sklady
 
                 var label = new Label();
                 label.Text = item.FileName;
-                label.Top = i * 30;
+                label.Top = 15 + i * 30;
                 label.Left = 20;
                 label.Height = 15;
                 label.Name = item.FileName + "lbl";
 
                 var progressBar = new ProgressBar();
-                progressBar.Top = i * 30;
+                progressBar.Top = 15 + i * 30;
                 progressBar.Left = 170;
                 progressBar.Height = 15;
                 progressBar.Name = item.FileName + "pb";
