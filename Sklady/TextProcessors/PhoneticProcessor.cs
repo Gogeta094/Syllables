@@ -133,10 +133,26 @@ namespace Sklady.TextProcessors
 
             word = word.Replace("дж", "d").Replace("дз", "z");
 
-            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos
-            word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
+            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos           
+
+            if (Settings.Language == Languages.Ancient)
+            {
+                word = ReplaceAncientSymbols(word);
+            }
+            else
+            {
+                word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
+            }           
 
             return word;
+        }
+
+        private string ReplaceAncientSymbols(string word)
+        {
+            return new StringBuilder(word)
+                .Replace("ъ", "s")
+                .Replace("ь", "m")
+                .ToString();
         }
 
         private string ReplaceNextNonStableChar(string symbol, string word)
@@ -188,6 +204,8 @@ namespace Sklady.TextProcessors
                 .Replace('j', 'й')
                 .Replace("d", "дж")
                 .Replace("z", "дз")
+                .Replace("s", "ъ")
+                .Replace("m", "ь")
                 .ToString();
         }
     }

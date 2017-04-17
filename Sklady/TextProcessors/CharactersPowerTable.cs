@@ -174,6 +174,8 @@ namespace Sklady
                 new Character() { CharacterValue = 'є', Power = -1 },
                 new Character() { CharacterValue = 'я', Power = -1 },
                 new Character() { CharacterValue = 'ю', Power = -1 },
+                new Character() { CharacterValue = 's', Power = -1 },
+                new Character() { CharacterValue = 'm', Power = -1 },
                 new Character() { CharacterValue = 'ы', Power = -1 },
                 new Character() { CharacterValue = 'э', Power = -1 }, 
                 new Character() { CharacterValue = 'ѣ', Power = -1 },
