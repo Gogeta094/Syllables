@@ -79,6 +79,7 @@
     <Compile Include="CharactersBase.Designer.cs">
       <DependentUpon>CharactersBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\FileProcessingResult.cs" />
     <Compile Include="TextProcessors\CharactersPowerTable.cs" />
     <Compile Include="Export\ExportResults.cs" />
     <Compile Include="Export\FileExportResults.cs" />

@@ -70,15 +70,14 @@ namespace Sklady
             {
                 Parallel.ForEach(analyzers, textAnalyzer =>
                 {
-                    var res = textAnalyzer.GetResults();
-                    var cvv = textAnalyzer.ResultCVV;
+                    var res = textAnalyzer.GetResults();                    
 
                     exportResults.Add(new FileExportResults()
                     {
-                        Syllables = _export.GetSyllables(res),
-                        FirstSyllables = _export.GetFirstSyllables(res),
-                        SyllablesCVV = _export.GetSyllablesCVV(cvv),
-                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(cvv),
+                        Syllables = _export.GetSyllables(res.ReadableResults),
+                        FirstSyllables = _export.GetFirstSyllables(res.ReadableResults),
+                        SyllablesCVV = _export.GetSyllablesCVV(res.CvvResults),
+                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(res.CvvResults),
                         FileName = textAnalyzer.FileName
                     });
 
@@ -87,7 +86,6 @@ namespace Sklady
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResults);
-
             });            
         }
 

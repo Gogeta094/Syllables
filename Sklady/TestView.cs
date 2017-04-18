@@ -27,11 +27,10 @@ namespace Sklady
             var analyzer = new TextAnalyzer(richTextBox1.Text, "");
 
             var result = analyzer.GetResults();
-            var resText = export.GetSyllables(result);
+            var resText = export.GetSyllables(result.ReadableResults);
             richTextBox2.Text = resText;
-
-            var cvv = analyzer.ResultCVV;
-            var resCVV = export.GetSyllablesCVV(cvv);
+            
+            var resCVV = export.GetSyllablesCVV(result.CvvResults);
             richTextBox3.Text = resCVV;
         }
     }

@@ -91,9 +91,8 @@ namespace Sklady.Export
             }).ToList();
         }
 
-        private List<AnalyzeResults> ConvertToCvv(List<AnalyzeResults> anResults)
+        public List<AnalyzeResults> ConvertToCvv(List<AnalyzeResults> anResults)
         {
-
             foreach (var resultitem in anResults)
             {
                 for (var i = 0; i < resultitem.Syllables.Length; i++)

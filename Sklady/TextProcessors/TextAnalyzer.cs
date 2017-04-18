@@ -1,4 +1,5 @@
-﻿using Sklady.TextProcessors;
+﻿using Sklady.Models;
+using Sklady.TextProcessors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,13 @@ namespace Sklady
     public class TextAnalyzer
     {
         private string _text;
-        private string[] _words;       
+        private string[] _words;
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
-        private PhoneticProcessor _phoneticProcessor = new PhoneticProcessor();
-
-        public List<AnalyzeResults> ResultCVV { get; private set; }
+        private PhoneticProcessor _phoneticProcessor = new PhoneticProcessor();        
 
         public string FileName { get; private set; }
+        public int TextLength { get; private set; }
 
         public event Action<int, int, string> OnWordAnalyzed;
         public event Action<Exception, string, string> OnErrorOccured;
@@ -26,9 +26,8 @@ namespace Sklady
         public TextAnalyzer(string text, string fileName)
         {
             FileName = fileName;
-            _wordAnalyzer = new WordAnalyzer();
-            ResultCVV = new List<AnalyzeResults>();
-            PrepareText(text);             
+            _wordAnalyzer = new WordAnalyzer();            
+            PrepareText(text);
         }
 
         private void PrepareText(string inputText)
@@ -52,9 +51,9 @@ namespace Sklady
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words
         }
 
-        public List<AnalyzeResults> GetResults()
+        public FileProcessingResult GetResults()
         {
-            var result = new List<AnalyzeResults>();
+            var result = new FileProcessingResult();
 
             for (var i = 0; i < _words.Length; i++)
             {
@@ -70,8 +69,17 @@ namespace Sklady
                 {
                     var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
 
-                    UpdateCVVResultSet(syllables, _words[i]);
-                    UpdateReadableViewSet(syllables, _words[i], result);
+                    result.CvvResults.Add(new AnalyzeResults()
+                    {
+                        Word = _words[i],
+                        Syllables = RemoveApos(syllables)
+                    });
+
+                    result.ReadableResults.Add(new AnalyzeResults()
+                    {
+                        Word = _words[i],
+                        Syllables = UnprocessPhonetics(syllables)
+                    });
 
                     OnWordAnalyzed?.Invoke(i, _words.Length - 1, FileName);
                 }
@@ -79,30 +87,10 @@ namespace Sklady
                 {
                     OnErrorOccured?.Invoke(ex, _words[i], FileName);
                 }
-            }
+            }            
 
             return result;
-        }
-
-        private void UpdateCVVResultSet(string[] syllables, string word)
-        {     
-            ResultCVV.Add(new AnalyzeResults()
-            {
-                Word = word,
-                Syllables = RemoveApos(syllables)
-            });
-        }
-
-        private void UpdateReadableViewSet(string[] syllables, string word, List<AnalyzeResults> result)
-        {        
-            syllables = UnprocessPhonetics(syllables);          
-
-            result.Add(new AnalyzeResults()
-            {
-                Word = word,
-                Syllables = syllables
-            });
-        }
+        }      
 
         private string[] UnprocessPhonetics(string[] syllabeles)
         {
@@ -123,6 +111,6 @@ namespace Sklady
             }
 
             return result;
-        }      
+        }
     }
 }
