@@ -12,11 +12,10 @@ namespace Sklady.TextProcessors
 
         public string Process(string input)
         {
-            var res = ProcessTwoSoundingLetters(input);
-            res = ProcessNonStableCharacters(res);
+            var res = ProcessTwoSoundingLetters(input);            
 
             return res;
-        }
+        }        
 
         public string Unprocess(string input)
         {
@@ -28,10 +27,22 @@ namespace Sklady.TextProcessors
 
         private string UnprocessTwoSoundingLetters(string input)
         {
-            return input.Replace("йу", "ю")
+            var res = input.Replace("йу", "ю")
                         .Replace("йа", "я")
-                        .Replace("йе", "є")
                         .Replace("йі", "ї");
+
+            if (Settings.Language == Languages.Ukraine)
+            {
+                res = res.Replace("йе", "є")
+                         .Replace("шч", "щ");
+            }
+            else if (Settings.Language == Languages.Russian)
+            {
+                res = res.Replace("йе", "ё");
+                res = res.Replace("йи", "и");
+            }
+
+            return res;
         }
 
         private string ProcessTwoSoundingLetters(string input)
@@ -40,6 +51,14 @@ namespace Sklady.TextProcessors
             input = ReplacePhoneticCharacter('я', "йа", input);
             input = ReplacePhoneticCharacter('є', "йе", input);
             input = ReplacePhoneticCharacter('ї', "йі", input);
+            input = ReplacePhoneticCharacter('щ', "шч", input);            
+
+            if (Settings.Language == Languages.Russian)
+            {
+                input = ReplacePhoneticCharacter('ё', "йе", input);
+                input = ReplacePhoneticCharacter('и', "йи", input);
+            }
+                
 
             return input;
         }
@@ -60,7 +79,7 @@ namespace Sklady.TextProcessors
             return input;
         }
 
-        private string ProcessNonStableCharacters(string word)
+        public string ProcessNonStableCharacters(string word)
         {
             var indexOfV = word.IndexOf('в');
 
@@ -114,10 +133,26 @@ namespace Sklady.TextProcessors
 
             word = word.Replace("дж", "d").Replace("дз", "z");
 
-            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos
-            word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
+            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos           
+
+            if (Settings.Language == Languages.Ancient)
+            {
+                word = ReplaceAncientSymbols(word);
+            }
+            else
+            {
+                word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
+            }           
 
             return word;
+        }
+
+        private string ReplaceAncientSymbols(string word)
+        {
+            return new StringBuilder(word)
+                .Replace("ъ", "s")
+                .Replace("ь", "m")
+                .ToString();
         }
 
         private string ReplaceNextNonStableChar(string symbol, string word)
@@ -169,10 +204,8 @@ namespace Sklady.TextProcessors
                 .Replace('j', 'й')
                 .Replace("d", "дж")
                 .Replace("z", "дз")
-                //.Replace("\'йа", "я")
-                //.Replace("\'йу", "ю")
-                //.Replace("\'йе", "є")
-                //.Replace("\'йі", "ї")
+                .Replace("s", "ъ")
+                .Replace("m", "ь")
                 .ToString();
         }
     }

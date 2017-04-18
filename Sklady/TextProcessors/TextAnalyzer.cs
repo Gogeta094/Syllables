@@ -28,7 +28,7 @@ namespace Sklady
             FileName = fileName;
             _wordAnalyzer = new WordAnalyzer();
             ResultCVV = new List<AnalyzeResults>();
-            PrepareText(text);            
+            PrepareText(text);             
         }
 
         private void PrepareText(string inputText)
@@ -47,7 +47,7 @@ namespace Sklady
 
             _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
             _text = Regex.Replace(_text, @"\-", "");
-            _text = Regex.Replace(_text, @"и́", "й");
+            _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");
 
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words
         }
@@ -58,7 +58,10 @@ namespace Sklady
 
             for (var i = 0; i < _words.Length; i++)
             {
-                _words[i] = _phoneticProcessor.Process(_words[i]); // Replace some chars according to their power
+                if (Settings.PhoneticsMode)
+                    _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
+
+                _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
             }
 
             for (var i = 0; i < _words.Length; i++)

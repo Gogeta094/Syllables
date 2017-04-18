@@ -17,6 +17,8 @@ namespace Sklady
         public static bool SeparateAfterFirst = true;
         public static string SyllableSeparator = "-";
         public static Table CharactersTable = Table.Table1;
+        public static bool PhoneticsMode = true;
+        public static Languages Language = Languages.Ukraine;
 
         public static string LastOpenFolderPath = "";
         public static string LastSaveFolderPath = "";

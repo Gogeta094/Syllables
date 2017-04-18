@@ -21,14 +21,19 @@ namespace Sklady
         {
             tbSeparator.Text = Settings.SyllableSeparator;
             cbSeparationMode.SelectedIndex = Settings.SeparateAfterFirst ? 0 : 1;
-            cbCharactersTable.SelectedIndex = (int) Settings.CharactersTable;            
+            cbCharactersTable.SelectedIndex = (int) Settings.CharactersTable;
+            cbPhoneticsMode.Checked = Settings.PhoneticsMode;
+            cbbLanguage.DataSource = new BindingList<string>(Enum.GetNames(typeof(Languages)));
+            cbbLanguage.SelectedItem = Settings.Language;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Settings.SyllableSeparator = tbSeparator.Text;
             Settings.SeparateAfterFirst = cbSeparationMode.SelectedText.Equals("c-cc");
-            Settings.CharactersTable = (Table) cbCharactersTable.SelectedIndex;            
+            Settings.CharactersTable = (Table) cbCharactersTable.SelectedIndex;
+            Settings.PhoneticsMode = cbPhoneticsMode.Checked;
+            Settings.Language = (Languages)cbbLanguage.SelectedIndex;
 
             this.Close();
         }
