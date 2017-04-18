@@ -22,7 +22,7 @@ namespace Sklady
         {
             richTextBox2.Clear();
 
-            var export = ExportResults.Instance;
+            var export = ResultsExporter.Instance;
             var text = richTextBox1.Text;
             var analyzer = new TextAnalyzer(richTextBox1.Text, "");
 

@@ -23,7 +23,7 @@ namespace Sklady
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
-        private ExportResults _export = ExportResults.Instance;
+        private ResultsExporter _export = ResultsExporter.Instance;
 
         private List<InputFileModel> _inputData;
         public List<InputFileModel> InputData
@@ -86,7 +86,7 @@ namespace Sklady
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResults);
-            });            
+            });
         }
 
         private void OnFileProcessed()

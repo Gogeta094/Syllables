@@ -46,7 +46,7 @@ namespace Sklady.Models
         private Dictionary<string, int> GetCvvStatistics()
         {
             var res = new Dictionary<string, int>();
-            var exporter = ExportResults.Instance;
+            var exporter = ResultsExporter.Instance;
 
             var exportedCvv = exporter.ConvertToCvv(this.CvvResults);
 
