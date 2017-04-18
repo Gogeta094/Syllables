@@ -43,6 +43,8 @@ namespace Sklady.Models
             }
         }
 
+        public string FileName { get; set; }        
+
         private Dictionary<string, int> GetCvvStatistics()
         {
             var res = new Dictionary<string, int>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sklady.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -89,7 +90,7 @@ namespace Sklady.Export
                 Word = c.Word,
                 Syllables = new string[] { c.Syllables.First() }
             }).ToList();
-        }
+        }        
 
         public List<AnalyzeResults> ConvertToCvv(List<AnalyzeResults> anResults)
         {
@@ -105,6 +106,31 @@ namespace Sklady.Export
             }
 
             return anResults;
+        }
+
+        public string GetStatisticsTableCsv(List<FileProcessingResult> fileProcessingResults)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var fileResult in fileProcessingResults)
+            {
+                var cvvStatistics = GetCvvStatistics(fileResult);
+                sb.AppendLine(String.Format("{0},{1},{2},{3}", fileResult.FileName, fileResult.TextLength, fileResult.SyllablesCount, cvvStatistics));
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetCvvStatistics(FileProcessingResult fileResult)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var item in fileResult.CvvStatistics)
+            {
+                //TODO:Think about dictionary sorting logic
+            }
+
+            return sb.ToString();
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using Sklady.Export;
+using Sklady.Models;
 
 namespace Sklady
 {
@@ -23,7 +24,7 @@ namespace Sklady
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
-        private ResultsExporter _export = ResultsExporter.Instance;
+        private ResultsExporter _export = ResultsExporter.Instance;       
 
         private List<InputFileModel> _inputData;
         public List<InputFileModel> InputData
@@ -50,7 +51,7 @@ namespace Sklady
             {
                 MessageBox.Show("No text file selected.");
                 return;
-            }
+            }                  
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
@@ -64,15 +65,17 @@ namespace Sklady
 
             progressBar1.Maximum = InputData.Count;
 
-            var exportResults = new List<FileExportResults>();
+            var exportResult = new ExportResults();
+            var fileProcessingResults = new List<FileProcessingResult>();
 
             var task = Task.Factory.StartNew(() =>
             {
                 Parallel.ForEach(analyzers, textAnalyzer =>
                 {
-                    var res = textAnalyzer.GetResults();                    
+                    var res = textAnalyzer.GetResults();
+                    fileProcessingResults.Add(res);
 
-                    exportResults.Add(new FileExportResults()
+                    exportResult.FileExportResults.Add(new FileExportResults()
                     {
                         Syllables = _export.GetSyllables(res.ReadableResults),
                         FirstSyllables = _export.GetFirstSyllables(res.ReadableResults),
@@ -84,8 +87,11 @@ namespace Sklady
                     OnFileProcessed();
                 });
 
+                var csvRes = String.Empty;
+                csvRes = _export.GetStatisticsTableCsv(fileProcessingResults);
+
                 if (OnFilesProcessed != null)
-                    OnFilesProcessed(exportResults);
+                    OnFilesProcessed(exportResult.FileExportResults);
             });
         }
 
