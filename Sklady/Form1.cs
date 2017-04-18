@@ -28,7 +28,7 @@ namespace Sklady
             UpdateSaveButton(result);
         }
 
-        private IResultsExport _export = ExportResults.Instance;
+        private ResultsExporter _export = ResultsExporter.Instance;
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {

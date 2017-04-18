@@ -12,6 +12,6 @@ namespace Sklady.Export
         public string FirstSyllables { get; set; }
         public string SyllablesCVV { get; set; }
         public string SyllablesFirstCVV { get; set; }
-        public string FileName { get; set; }
+        public string FileName { get; set; }         
     }
 }

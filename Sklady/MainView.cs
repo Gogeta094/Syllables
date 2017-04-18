@@ -23,7 +23,7 @@ namespace Sklady
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
-        private ExportResults _export = ExportResults.Instance;
+        private ResultsExporter _export = ResultsExporter.Instance;
 
         private List<InputFileModel> _inputData;
         public List<InputFileModel> InputData
@@ -70,15 +70,14 @@ namespace Sklady
             {
                 Parallel.ForEach(analyzers, textAnalyzer =>
                 {
-                    var res = textAnalyzer.GetResults();
-                    var cvv = textAnalyzer.ResultCVV;
+                    var res = textAnalyzer.GetResults();                    
 
                     exportResults.Add(new FileExportResults()
                     {
-                        Syllables = _export.GetSyllables(res),
-                        FirstSyllables = _export.GetFirstSyllables(res),
-                        SyllablesCVV = _export.GetSyllablesCVV(cvv),
-                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(cvv),
+                        Syllables = _export.GetSyllables(res.ReadableResults),
+                        FirstSyllables = _export.GetFirstSyllables(res.ReadableResults),
+                        SyllablesCVV = _export.GetSyllablesCVV(res.CvvResults),
+                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(res.CvvResults),
                         FileName = textAnalyzer.FileName
                     });
 
@@ -87,8 +86,7 @@ namespace Sklady
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResults);
-
-            });            
+            });
         }
 
         private void OnFileProcessed()
