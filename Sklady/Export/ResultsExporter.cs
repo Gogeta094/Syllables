@@ -112,25 +112,57 @@ namespace Sklady.Export
         {
             var sb = new StringBuilder();
 
+            var cvvHeader = GenerateTableHeader(sb, fileProcessingResults);
+
             foreach (var fileResult in fileProcessingResults)
             {
-                var cvvStatistics = GetCvvStatistics(fileResult);
+                var cvvStatistics = GetCvvStatistics(fileResult, cvvHeader);
                 sb.AppendLine(String.Format("{0},{1},{2},{3}", fileResult.FileName, fileResult.TextLength, fileResult.SyllablesCount, cvvStatistics));
             }
 
             return sb.ToString();
         }
 
-        private string GetCvvStatistics(FileProcessingResult fileResult)
+       
+        private string GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader)
         {
             var sb = new StringBuilder();
 
-            foreach (var item in fileResult.CvvStatistics)
+            var cvvCounts = new List<int>();
+
+            foreach (var header in cvvHeader)
             {
-                //TODO:Think about dictionary sorting logic
+                if (fileResult.CvvStatistics.ContainsKey(header))
+                {
+                    cvvCounts.Add(fileResult.CvvStatistics[header]);
+                }
+                else
+                {
+                    cvvCounts.Add(0);
+                }
             }
 
+            var res = String.Join(",", cvvCounts);
+
+            sb.Append(res);
+
             return sb.ToString();
+        }
+
+        private SortedSet<string> GenerateTableHeader(StringBuilder sb, List<FileProcessingResult> fileProcessingResults)
+        {
+            var cvvSet = new SortedSet<string>();
+
+            foreach (var item in fileProcessingResults)
+            {
+                cvvSet.UnionWith(item.CvvStatistics.Select(c => c.Key));
+            }
+
+            var cvvHeader = String.Join(",", cvvSet);
+
+            sb.AppendLine(String.Format("{0},{1},{2},{3}", "Text", "Length", "SyllablesCount", cvvHeader));
+
+            return cvvSet;
         }
     }
 }

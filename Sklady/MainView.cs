@@ -20,7 +20,7 @@ namespace Sklady
             InitializeComponent();
         }
 
-        public event Action<List<FileExportResults>> OnFilesProcessed;
+        public event Action<ExportResults> OnFilesProcessed;
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
@@ -42,6 +42,7 @@ namespace Sklady
 
         private void OnInputDataChanged()
         {
+            progressBar1.Value = 0;
             CreateProgressBars();
         }
 
@@ -86,12 +87,11 @@ namespace Sklady
 
                     OnFileProcessed();
                 });
-
-                var csvRes = String.Empty;
-                csvRes = _export.GetStatisticsTableCsv(fileProcessingResults);
+                
+                exportResult.StatisticsTableCsv = _export.GetStatisticsTableCsv(fileProcessingResults);
 
                 if (OnFilesProcessed != null)
-                    OnFilesProcessed(exportResult.FileExportResults);
+                    OnFilesProcessed(exportResult);
             });
         }
 
@@ -112,6 +112,8 @@ namespace Sklady
 
         private void CreateProgressBars()
         {
+            panel1.Controls.Clear();
+
             for (var i = 0; i < InputData.Count; i++)
             {
                 var item = InputData[i];

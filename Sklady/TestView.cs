@@ -31,7 +31,7 @@ namespace Sklady
             richTextBox2.Text = resText;
             
             var resCVV = export.GetSyllablesCVV(result.CvvResults);
-            richTextBox3.Text = resCVV;
+            richTextBox3.Text = resCVV;            
         }
     }
 }

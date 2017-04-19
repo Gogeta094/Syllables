@@ -87,10 +87,12 @@ namespace Sklady
                 {
                     OnErrorOccured?.Invoke(ex, _words[i], FileName);
                 }
-            }            
+            }
+
+            result.FileName = this.FileName;
 
             return result;
-        }      
+        }
 
         private string[] UnprocessPhonetics(string[] syllabeles)
         {

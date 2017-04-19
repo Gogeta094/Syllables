@@ -20,12 +20,12 @@ namespace Sklady
             mainView1.OnFilesProcessed += MainView1_OnFilesProcessed1;
         }
 
-        private List<FileExportResults> _exportResults;
+        private ExportResults _exportResults;
 
-        private void MainView1_OnFilesProcessed1(List<FileExportResults> result)
+        private void MainView1_OnFilesProcessed1(ExportResults result)
         {
             _exportResults = result;
-            UpdateSaveButton(result);
+            UpdateSaveButton(result.FileExportResults);
         }
 
         private ResultsExporter _export = ResultsExporter.Instance;
@@ -66,8 +66,8 @@ namespace Sklady
             folderDialog.SelectedPath = Settings.LastSaveFolderPath;
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
-            {
-                foreach (var fileResult in _exportResults)
+            {                
+                foreach (var fileResult in _exportResults.FileExportResults)
                 {
                     var directoryPath = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, fileResult.FileName)).FullName;
 
@@ -76,9 +76,17 @@ namespace Sklady
                     SaveFile(fileResult.SyllablesCVV, directoryPath, "SyllablesCVV.txt");
                     SaveFile(fileResult.SyllablesFirstCVV, directoryPath, "SyllablesFirstCVV.txt");
                 }
+
+                SaveCvv(_exportResults.StatisticsTableCsv, folderDialog.SelectedPath);
             }
 
             Settings.LastSaveFolderPath = folderDialog.SelectedPath;
+        }
+
+        private void SaveCvv(string statisticsTableCsv, string path)
+        {
+            var fullPath = Path.Combine(path, "Statistics.csv");
+            File.WriteAllText(fullPath, statisticsTableCsv, Encoding.UTF8);
         }
 
         private void SaveFile(string result, string path, string fileName)

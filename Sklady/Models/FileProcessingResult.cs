@@ -9,6 +9,9 @@ namespace Sklady.Models
 {
     public class FileProcessingResult
     {
+        private Dictionary<string, int> _cvvStatistics;
+        private List<AnalyzeResults> _cvvResults;
+
         public FileProcessingResult()
         {
             ReadableResults = new List<AnalyzeResults>();
@@ -17,7 +20,18 @@ namespace Sklady.Models
 
         public List<AnalyzeResults> ReadableResults { get; set; }
 
-        public List<AnalyzeResults> CvvResults { get; set; }
+        public List<AnalyzeResults> CvvResults
+        {
+            get
+            {
+                return _cvvResults;
+            }
+
+            set
+            {
+                _cvvResults = value;                
+            }
+        }       
 
         public int TextLength
         {
@@ -39,7 +53,10 @@ namespace Sklady.Models
         {
             get
             {
-                return GetCvvStatistics();
+                if (_cvvStatistics == null)
+                    _cvvStatistics = GetCvvStatistics();
+
+                return _cvvStatistics;
             }
         }
 
@@ -50,7 +67,7 @@ namespace Sklady.Models
             var res = new Dictionary<string, int>();
             var exporter = ResultsExporter.Instance;
 
-            var exportedCvv = exporter.ConvertToCvv(this.CvvResults);
+            var exportedCvv = exporter.ConvertToCvv(this.CvvResults.Select(c => c).ToList());
 
             foreach(var cvvResult in exportedCvv)
             {
