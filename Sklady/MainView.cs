@@ -24,7 +24,7 @@ namespace Sklady
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
         private CharactersTable charsTable = CharactersTable.Instance;
-        private ResultsExporter _export = ResultsExporter.Instance;       
+        private ResultsExporter _export = ResultsExporter.Instance;
 
         private List<InputFileModel> _inputData;
         public List<InputFileModel> InputData
@@ -52,7 +52,7 @@ namespace Sklady
             {
                 MessageBox.Show("No text file selected.");
                 return;
-            }                  
+            }
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
@@ -64,7 +64,7 @@ namespace Sklady
                 analyzers.Add(textAnalyzer);
             }
 
-            progressBar1.Maximum = InputData.Count;
+            progressBar1.Value = 0;
 
             var exportResult = new ExportResults();
             var fileProcessingResults = new List<FileProcessingResult>();
@@ -75,6 +75,8 @@ namespace Sklady
                 {
                     var res = textAnalyzer.GetResults();
                     fileProcessingResults.Add(res);
+                    
+                    UpdateProcessingPanel(true);
 
                     exportResult.FileExportResults.Add(new FileExportResults()
                     {
@@ -84,15 +86,31 @@ namespace Sklady
                         SyllablesFirstCVV = _export.GetSyllablesFirstCVV(res.CvvResults),
                         FileName = textAnalyzer.FileName
                     });
-
-                    OnFileProcessed();
+                    
                 });
-                
+
                 exportResult.StatisticsTableCsv = _export.GetStatisticsTableCsv(fileProcessingResults);
+
+                UpdateProcessingPanel(false);
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResult);
             });
+        }
+
+        private void UpdateProcessingPanel(bool visible)
+        {
+            if (processingPanel.InvokeRequired)
+            {
+                processingPanel.Invoke((MethodInvoker)delegate ()
+                {
+                    processingPanel.Visible = visible;
+                });
+            }
+            else
+            {
+                processingPanel.Visible = visible;
+            }
         }
 
         private void OnFileProcessed()
@@ -150,7 +168,7 @@ namespace Sklady
                 richTextBox1.Text += String.Format("{0} Error occured processing next word - {1}\n", file, word);
             }
         }
-        
+
         private void Analyzer_OnWordAnalyzed(int current, int total, string fileName)
         {
             var progressBar = (ProgressBar)panel1.Controls.Find(fileName + "pb", false).First();
@@ -182,7 +200,24 @@ namespace Sklady
 
         private void MainView_Load(object sender, EventArgs e)
         {
+            _export.OnFileCvvItemCalculated += _export_OnFileCvvItemCalculated;
+        }
 
+        private void _export_OnFileCvvItemCalculated(int totalCvvItems, int totalFiles)
+        {
+            if (progressBar1.InvokeRequired)
+            {
+                progressBar1.Invoke((MethodInvoker)delegate ()
+                {
+                    progressBar1.Maximum = totalCvvItems * totalFiles;
+                    progressBar1.Value += 1;
+                });
+            }
+            else
+            {
+                progressBar1.Maximum = totalCvvItems * totalFiles;
+                progressBar1.Value += 1;
+            }
         }
     }
 }

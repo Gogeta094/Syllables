@@ -12,6 +12,9 @@ namespace Sklady.Export
         private static ResultsExporter _instance;
 
         private CharactersTable _charsTable = CharactersTable.Instance;
+
+        public event Action<int, int> OnFileCvvItemCalculated;
+
         private ResultsExporter() {}
 
         public static ResultsExporter Instance
@@ -116,7 +119,7 @@ namespace Sklady.Export
 
             foreach (var fileResult in fileProcessingResults)
             {
-                var cvvStatistics = GetCvvStatistics(fileResult, cvvHeader);
+                var cvvStatistics = GetCvvStatistics(fileResult, cvvHeader, fileProcessingResults.Count);
                 sb.AppendLine(String.Format("{0},{1},{2},{3}", fileResult.FileName, fileResult.TextLength, fileResult.SyllablesCount, cvvStatistics));
             }
 
@@ -124,7 +127,7 @@ namespace Sklady.Export
         }
 
        
-        private string GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader)
+        private string GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader, int filesCount)
         {
             var sb = new StringBuilder();
 
@@ -140,6 +143,9 @@ namespace Sklady.Export
                 {
                     cvvCounts.Add(0);
                 }
+
+                if (OnFileCvvItemCalculated != null)
+                    OnFileCvvItemCalculated(cvvHeader.Count, filesCount);
             }
 
             var res = String.Join(",", cvvCounts);
