@@ -111,7 +111,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(741, 525);
+            this.tabControl1.Size = new System.Drawing.Size(741, 487);
             this.tabControl1.TabIndex = 4;
             // 
             // tabPage1
@@ -120,7 +120,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(733, 499);
+            this.tabPage1.Size = new System.Drawing.Size(733, 461);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -128,9 +128,10 @@
             // mainView1
             // 
             this.mainView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainView1.InputData = null;
             this.mainView1.Location = new System.Drawing.Point(3, 3);
             this.mainView1.Name = "mainView1";
-            this.mainView1.Size = new System.Drawing.Size(727, 493);
+            this.mainView1.Size = new System.Drawing.Size(727, 455);
             this.mainView1.TabIndex = 0;
             this.mainView1.Load += new System.EventHandler(this.mainView1_Load);
             // 
@@ -157,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(741, 549);
+            this.ClientSize = new System.Drawing.Size(741, 511);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

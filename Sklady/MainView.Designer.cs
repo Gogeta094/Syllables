@@ -45,7 +45,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(16, 415);
+            this.button1.Location = new System.Drawing.Point(16, 400);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(99, 32);
             this.button1.TabIndex = 0;
@@ -57,7 +57,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(16, 350);
+            this.progressBar1.Location = new System.Drawing.Point(16, 343);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(559, 39);
             this.progressBar1.TabIndex = 1;
@@ -105,7 +105,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::Sklady.Properties.Resources.ajax_loader;
             this.pictureBox1.InitialImage = global::Sklady.Properties.Resources.ajax_loader;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 10);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 19);
             this.pictureBox1.TabIndex = 6;
@@ -116,9 +116,9 @@
             this.processingPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.processingPanel.Controls.Add(this.label3);
             this.processingPanel.Controls.Add(this.pictureBox1);
-            this.processingPanel.Location = new System.Drawing.Point(134, 415);
+            this.processingPanel.Location = new System.Drawing.Point(133, 400);
             this.processingPanel.Name = "processingPanel";
-            this.processingPanel.Size = new System.Drawing.Size(171, 32);
+            this.processingPanel.Size = new System.Drawing.Size(171, 30);
             this.processingPanel.TabIndex = 7;
             this.processingPanel.Visible = false;
             // 
@@ -134,7 +134,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 331);
+            this.label4.Location = new System.Drawing.Point(14, 318);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(96, 13);
             this.label4.TabIndex = 8;
@@ -153,7 +153,7 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button1);
             this.Name = "MainView";
-            this.Size = new System.Drawing.Size(588, 462);
+            this.Size = new System.Drawing.Size(588, 449);
             this.Load += new System.EventHandler(this.MainView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.processingPanel.ResumeLayout(false);
