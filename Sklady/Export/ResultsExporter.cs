@@ -117,20 +117,26 @@ namespace Sklady.Export
 
             var cvvHeader = GenerateTableHeader(sb, fileProcessingResults);
 
+            var statisticsInfo = new List<List<int>>();
+
             foreach (var fileResult in fileProcessingResults)
             {
                 var cvvStatistics = GetCvvStatistics(fileResult, cvvHeader, fileProcessingResults.Count);
-                sb.AppendLine(String.Format("{0},{1},{2},{3}", fileResult.FileName, fileResult.TextLength, fileResult.SyllablesCount, cvvStatistics));
-            }
+                cvvStatistics.Insert(0, fileResult.SyllablesCount);
+                cvvStatistics.Insert(0, fileResult.TextLength);
+
+                var statisticsString = String.Join(",", cvvStatistics);
+                sb.AppendLine(String.Format("{0},{1}", fileResult.FileName, cvvStatistics));
+
+                statisticsInfo.Add(cvvStatistics);
+            }           
 
             return sb.ToString();
         }
 
        
-        private string GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader, int filesCount)
-        {
-            var sb = new StringBuilder();
-
+        private List<int> GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader, int filesCount)
+        {  
             var cvvCounts = new List<int>();
 
             foreach (var header in cvvHeader)
@@ -148,11 +154,7 @@ namespace Sklady.Export
                     OnFileCvvItemCalculated(cvvHeader.Count, filesCount);
             }
 
-            var res = String.Join(",", cvvCounts);
-
-            sb.Append(res);
-
-            return sb.ToString();
+            return cvvCounts;            
         }
 
         private SortedSet<string> GenerateTableHeader(StringBuilder sb, List<FileProcessingResult> fileProcessingResults)
