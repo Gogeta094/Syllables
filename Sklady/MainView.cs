@@ -35,8 +35,11 @@ namespace Sklady
             }
             set
             {
-                _inputData = value;
-                OnInputDataChanged();
+                if (value != null)
+                {
+                    _inputData = value;
+                    OnInputDataChanged();
+                }                
             }
         }
 

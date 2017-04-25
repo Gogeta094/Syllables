@@ -12,10 +12,14 @@ namespace Sklady.Export
         private static ResultsExporter _instance;
 
         private CharactersTable _charsTable = CharactersTable.Instance;
+        private StatisticsTableGenerator _statisticsTableGenerator;
 
         public event Action<int, int> OnFileCvvItemCalculated;
 
-        private ResultsExporter() {}
+        private ResultsExporter()
+        {
+            _statisticsTableGenerator = new StatisticsTableGenerator();
+        }
 
         public static ResultsExporter Instance
         {
@@ -113,64 +117,7 @@ namespace Sklady.Export
 
         public string GetStatisticsTableCsv(List<FileProcessingResult> fileProcessingResults)
         {
-            var sb = new StringBuilder();
-
-            var cvvHeader = GenerateTableHeader(sb, fileProcessingResults);
-
-            var statisticsInfo = new List<List<int>>();
-
-            foreach (var fileResult in fileProcessingResults)
-            {
-                var cvvStatistics = GetCvvStatistics(fileResult, cvvHeader, fileProcessingResults.Count);
-                cvvStatistics.Insert(0, fileResult.SyllablesCount);
-                cvvStatistics.Insert(0, fileResult.TextLength);
-
-                var statisticsString = String.Join(",", cvvStatistics);
-                sb.AppendLine(String.Format("{0},{1}", fileResult.FileName, cvvStatistics));
-
-                statisticsInfo.Add(cvvStatistics);
-            }           
-
-            return sb.ToString();
-        }
-
-       
-        private List<int> GetCvvStatistics(FileProcessingResult fileResult, SortedSet<string> cvvHeader, int filesCount)
-        {  
-            var cvvCounts = new List<int>();
-
-            foreach (var header in cvvHeader)
-            {
-                if (fileResult.CvvStatistics.ContainsKey(header))
-                {
-                    cvvCounts.Add(fileResult.CvvStatistics[header]);
-                }
-                else
-                {
-                    cvvCounts.Add(0);
-                }
-
-                if (OnFileCvvItemCalculated != null)
-                    OnFileCvvItemCalculated(cvvHeader.Count, filesCount);
-            }
-
-            return cvvCounts;            
-        }
-
-        private SortedSet<string> GenerateTableHeader(StringBuilder sb, List<FileProcessingResult> fileProcessingResults)
-        {
-            var cvvSet = new SortedSet<string>();
-
-            foreach (var item in fileProcessingResults)
-            {
-                cvvSet.UnionWith(item.CvvStatistics.Select(c => c.Key));
-            }
-
-            var cvvHeader = String.Join(",", cvvSet);
-
-            sb.AppendLine(String.Format("{0},{1},{2},{3}", "Text", "Length", "SyllablesCount", cvvHeader));
-
-            return cvvSet;
-        }
+            return _statisticsTableGenerator.GetTableString(fileProcessingResults);           
+        }       
     }
 }
