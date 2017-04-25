@@ -21,14 +21,25 @@ namespace Sklady.Export
             var headerItems = GenerateTableHeader();
             sb.AppendLine(String.Join(",", headerItems));
 
+
+            var statisticsGrouped = new List<List<int>>();
             foreach (var resItem in results)
             {
                 var fileStatistics = GenerateStatistics(resItem);
+                statisticsGrouped.Add(GroupByMeasure(fileStatistics));
+
                 sb.AppendLine(String.Format("{0},{1}", resItem.FileName, String.Join(",", fileStatistics)));
             }
+
+
             
 
             return sb.ToString();
+        }
+
+        private List<int> GroupByMeasure(List<int> fileStatistics)
+        {
+            throw new NotImplementedException();
         }
 
         private List<int> GenerateStatistics(FileProcessingResult fileResult)
@@ -47,10 +58,18 @@ namespace Sklady.Export
                 else
                 {
                     res.Add(0);
-                }               
+                }
             }
 
             return res;
+        }
+
+        private List<int> GenerateStatisticsSummary(List<int> input)
+        {
+            var result = new List<int>();
+
+
+            return result;
         }
 
         private List<string> GenerateTableHeader()
@@ -73,9 +92,6 @@ namespace Sklady.Export
 
             _cvvHeaders = cvvSet.ToList();
         }
-
-
-
 
 
         //public List<int> GetWeightedAvg(List<List<int>> inputData)
