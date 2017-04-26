@@ -67,7 +67,7 @@ namespace Sklady
             {
                 try
                 {
-                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
+                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
 
                     result.CvvResults.Add(new AnalyzeResults()
                     {

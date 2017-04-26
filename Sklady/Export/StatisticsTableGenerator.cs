@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 namespace Sklady.Export
 {
     public class StatisticsTableGenerator
-    {       
+    {
         private List<string> _cvvHeaders;
+        private StatisticsCalculator _statisticsCalculator;
 
-        public StatisticsTableGenerator() { }
+        public StatisticsTableGenerator()
+        {            
+        }
 
         public string GetTableString(List<FileProcessingResult> results)
         {
@@ -22,24 +25,47 @@ namespace Sklady.Export
             sb.AppendLine(String.Join(",", headerItems));
 
 
-            var statisticsGrouped = new List<List<int>>();
+            var filesStatistics = new List<List<int>>();
+
             foreach (var resItem in results)
             {
                 var fileStatistics = GenerateStatistics(resItem);
-                statisticsGrouped.Add(GroupByMeasure(fileStatistics));
+                filesStatistics.Add(fileStatistics);
 
                 sb.AppendLine(String.Format("{0},{1}", resItem.FileName, String.Join(",", fileStatistics)));
             }
 
+            var groupedStatistics = GroupByMeasure(filesStatistics);
+            _statisticsCalculator = new StatisticsCalculator(groupedStatistics[0]); // at 0 position we have list of file lengths
 
-            
+            var avg = groupedStatistics.Select(c => _statisticsCalculator.GetWeightedAvarage(c));
+            sb.AppendLine(String.Format("{0},{1}", "Average", String.Join(",", avg)));
+
+            var weightedDelta = groupedStatistics.Select(c => _statisticsCalculator.GetWeightedDelta(c));
+            sb.AppendLine(String.Format("{0},{1}", "Avg Square Delta", String.Join(",", weightedDelta)));
 
             return sb.ToString();
         }
 
-        private List<int> GroupByMeasure(List<int> fileStatistics)
+        private List<List<int>> GroupByMeasure(List<List<int>> fileStatistics)
         {
-            throw new NotImplementedException();
+            var count = fileStatistics.First().Count; // all list should have the same count
+            var res = new List<List<int>>();
+
+            for (var i = 0; i < count; i++)
+            {
+                res.Add(new List<int>());
+            }
+
+            for (var i = 0; i < count; i++)
+            {                
+                for (var j = 0; j < fileStatistics.Count; j++)
+                {
+                    res[i].Add(fileStatistics[j][i]);
+                }
+            }
+
+            return res;
         }
 
         private List<int> GenerateStatistics(FileProcessingResult fileResult)
@@ -76,7 +102,7 @@ namespace Sklady.Export
         {
             var res = new List<string>();
             res.AddRange(new string[] { "Text", "Length", "SyllablesCount" });
-            res.AddRange(_cvvHeaders);            
+            res.AddRange(_cvvHeaders);
 
             return res;
         }

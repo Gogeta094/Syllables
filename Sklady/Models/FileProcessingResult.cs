@@ -72,7 +72,10 @@ namespace Sklady.Models
             foreach(var cvvResult in exportedCvv)
             {
                 for (var i = 0; i < cvvResult.Syllables.Length; i++)
-                {                    
+                {
+                    if (IsEmptySyllable(cvvResult.Syllables[i]))
+                        continue;                 
+                    
                     if (!res.ContainsKey(cvvResult.Syllables[i]))
                     {
                         res.Add(cvvResult.Syllables[i], 1);
@@ -85,6 +88,11 @@ namespace Sklady.Models
             }
 
             return res;
+        }
+
+        private bool IsEmptySyllable(string syllable)
+        {
+            return String.IsNullOrEmpty(syllable) || String.IsNullOrWhiteSpace(syllable);
         }
     }
 }
