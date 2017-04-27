@@ -98,7 +98,8 @@ namespace Sklady
         {
             for (var i = 0; i < syllabeles.Length; i++)
             {
-                syllabeles[i] = _phoneticProcessor.Unprocess(syllabeles[i]);
+                syllabeles[i] = _phoneticProcessor.RemoveTechnicalCharacters(syllabeles[i]);               
+                //syllabeles[i] = _phoneticProcessor.Unprocess(syllabeles[i]);
             }
 
             return syllabeles;

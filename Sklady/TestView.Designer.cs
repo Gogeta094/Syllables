@@ -41,7 +41,7 @@
             // 
             this.richTextBox2.Location = new System.Drawing.Point(256, 42);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(199, 399);
+            this.richTextBox2.Size = new System.Drawing.Size(199, 331);
             this.richTextBox2.TabIndex = 5;
             this.richTextBox2.Text = "";
             // 
@@ -49,13 +49,13 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(22, 42);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(199, 399);
+            this.richTextBox1.Size = new System.Drawing.Size(199, 331);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(19, 462);
+            this.button1.Location = new System.Drawing.Point(22, 398);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 3;
@@ -67,7 +67,7 @@
             // 
             this.richTextBox3.Location = new System.Drawing.Point(491, 42);
             this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(199, 399);
+            this.richTextBox3.Size = new System.Drawing.Size(199, 331);
             this.richTextBox3.TabIndex = 6;
             this.richTextBox3.Text = "";
             // 
@@ -110,7 +110,7 @@
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button1);
             this.Name = "TestView";
-            this.Size = new System.Drawing.Size(703, 504);
+            this.Size = new System.Drawing.Size(703, 438);
             this.ResumeLayout(false);
             this.PerformLayout();
 

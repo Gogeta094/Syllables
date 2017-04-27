@@ -18,28 +18,27 @@ namespace Sklady.TextProcessors
         }        
 
         public string Unprocess(string input)
-        {
-            var res = RemoveTechnicalCharacters(input);
-            res = UnprocessTwoSoundingLetters(res);
+        {          
+            var res = UnprocessTwoSoundingLetters(input);
 
             return res;
         }
 
         private string UnprocessTwoSoundingLetters(string input)
         {
-            var res = input.Replace("йу", "ю")
-                        .Replace("йа", "я")
-                        .Replace("йі", "ї");
+            var res = input.Replace("jу", "ю")
+                        .Replace("jа", "я")
+                        .Replace("jі", "ї");
 
             if (Settings.Language == Languages.Ukraine)
             {
-                res = res.Replace("йе", "є")
+                res = res.Replace("jе", "є")
                          .Replace("шч", "щ");
             }
             else if (Settings.Language == Languages.Russian)
             {
-                res = res.Replace("йе", "ё");
-                res = res.Replace("йи", "и");
+                res = res.Replace("jе", "ё");
+                res = res.Replace("jи", "и");
             }
 
             return res;
@@ -47,16 +46,16 @@ namespace Sklady.TextProcessors
 
         private string ProcessTwoSoundingLetters(string input)
         {
-            input = ReplacePhoneticCharacter('ю', "йу", input);
-            input = ReplacePhoneticCharacter('я', "йа", input);
-            input = ReplacePhoneticCharacter('є', "йе", input);
-            input = ReplacePhoneticCharacter('ї', "йі", input);
-            input = ReplacePhoneticCharacter('щ', "шч", input);            
+            input = ReplacePhoneticCharacter('ю', "jу", input);
+            input = ReplacePhoneticCharacter('я', "jа", input);
+            input = ReplacePhoneticCharacter('є', "jе", input);
+            input = ReplacePhoneticCharacter('ї', "jі", input);
+            input = ReplacePhoneticCharacter('щ', "шч", input); 
 
             if (Settings.Language == Languages.Russian)
             {
-                input = ReplacePhoneticCharacter('ё', "йе", input);
-                input = ReplacePhoneticCharacter('и', "йи", input);
+                input = ReplacePhoneticCharacter('ё', "jе", input);
+                input = ReplacePhoneticCharacter('и', "jи", input);
             }
                 
 
@@ -172,22 +171,22 @@ namespace Sklady.TextProcessors
                 if (nextChar == 'я')
                 {
                     word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йа");
+                    word = word.Insert(nextCharIndex, "jа");
                 }
                 if (nextChar == 'ю')
                 {
                     word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йу");
+                    word = word.Insert(nextCharIndex, "jу");
                 }
                 if (nextChar == 'є')
                 {
                     word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йе");
+                    word = word.Insert(nextCharIndex, "jе");
                 }
                 if (nextChar == 'ї')
                 {
                     word = word.Remove(nextCharIndex, 1);
-                    word = word.Insert(nextCharIndex, "йі");
+                    word = word.Insert(nextCharIndex, "jі");
                 }
 
                 indexOfAp = word.IndexOf(symbol, indexOfAp + 1);
@@ -196,7 +195,7 @@ namespace Sklady.TextProcessors
             return word;
         }
 
-        private string RemoveTechnicalCharacters(string word)
+        public string RemoveTechnicalCharacters(string word)
         {
             return new StringBuilder(word)
                 .Replace('w', 'в')
