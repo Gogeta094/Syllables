@@ -112,19 +112,22 @@ namespace Sklady.TextProcessors
             {
                 if (indexOfJ == 0)
                 {
-                    indexOfJ = word.IndexOf('й', indexOfJ + 1);
+                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
+                    indexOfJ = word.IndexOf('й', indexOfJ + 1);                    
+
                     continue;
                 }
 
                 if (indexOfJ == word.Length - 1 || indexOfJ == word.Length)
                 {
+                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
                     break;
                 }
 
 
                 if (!_table.isConsonant(word[indexOfJ - 1]) && _table.isConsonant(word[indexOfJ + 1]))
                 {
-                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
+                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
                 }
 
                 indexOfJ = word.IndexOf('й', indexOfJ + 1);
@@ -201,6 +204,7 @@ namespace Sklady.TextProcessors
                 .Replace('w', 'в')
                 .Replace('u', 'в')
                 .Replace('j', 'й')
+                .Replace('Y', 'й')
                 .Replace("d", "дж")
                 .Replace("z", "дз")
                 .Replace("s", "ъ")

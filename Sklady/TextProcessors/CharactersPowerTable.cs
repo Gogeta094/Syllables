@@ -101,7 +101,7 @@ namespace Sklady
                 new Character() {CharacterValue = 'щ', Power = 1},
                 new Character() {CharacterValue = 'd', Power = 2},
                 new Character() {CharacterValue = 'z', Power = 2},
-                new Character() {CharacterValue = 'й', Power = 2},
+                new Character() {CharacterValue = 'j', Power = 2},
                 new Character() {CharacterValue = 'г', Power = 2},
                 new Character() {CharacterValue = 'з', Power = 2},
                 new Character() {CharacterValue = 'ж', Power = 2},
@@ -118,7 +118,7 @@ namespace Sklady
                 new Character() {CharacterValue = 'л', Power = 6},
                 new Character() {CharacterValue = 'w', Power = 6},
                 new Character() {CharacterValue = 'u', Power = 7},
-                new Character() {CharacterValue = 'j', Power = 7},
+                new Character() {CharacterValue = 'Y', Power = 7},
             };
         }
 
