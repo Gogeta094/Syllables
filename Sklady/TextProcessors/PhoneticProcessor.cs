@@ -12,10 +12,25 @@ namespace Sklady.TextProcessors
 
         public string Process(string input)
         {
-            var res = ProcessTwoSoundingLetters(input);            
+            var res = ProcessTwoSoundingLetters(input);
+            res = ProcessDoubleConsonants(input);
 
             return res;
-        }        
+        }
+
+        private string ProcessDoubleConsonants(string input)
+        {
+            for (var i = 0; i < input.Length - 1; i++)
+            {
+                if (input[i] == input[i + 1]
+                    && _table.isConsonant(input[i]))
+                {
+                    input = input.Remove(i + 1, 1);
+                }
+            }
+
+            return input;
+        }
 
         public string Unprocess(string input)
         {          
