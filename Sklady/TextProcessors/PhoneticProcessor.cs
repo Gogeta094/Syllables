@@ -17,7 +17,22 @@ namespace Sklady.TextProcessors
             var res = ProcessTwoSoundingLetters(input);
             res = ProcessDoubleConsonants(input);
             res = ProcessDz(res);
+            res = ReductionReplacements(res);
             res = AsymilativeReplacements(res);
+           
+
+            return res;
+        }
+
+        private string ReductionReplacements(string res)
+        {
+            res = Regex.Replace(res, "нтськ", "нск");
+            res = Regex.Replace(res, "стськ", "ск");
+            res = Regex.Replace(res, "нтст", "нст");
+            res = Regex.Replace(res, "стц", "сц");
+            res = Regex.Replace(res, "стч", "шч");
+            res = Regex.Replace(res, "стд", "зд");
+            res = Regex.Replace(res, "стс", "с");
 
             return res;
         }
@@ -25,6 +40,7 @@ namespace Sklady.TextProcessors
         private string AsymilativeReplacements(string res)
         {
             res = Regex.Replace(res, "^(с|з)(ш|ж)", "$2");
+            res = Regex.Replace(res, "(с)(ш)", "$2");
             res = Regex.Replace(res, "(ч)(ц)", "$2");
             res = Regex.Replace(res, "(т)(с)", "ц");
             res = Regex.Replace(res, "(т)(ц)", "$2");

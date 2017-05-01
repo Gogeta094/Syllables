@@ -51,10 +51,11 @@ namespace Sklady.Export
 
             res = TakeOnlyFirstSyllable(result);
 
-            for (var i = 0; i < result.Count; i++)
-            {
-                sb.Append(String.Join(Settings.SyllableSeparator, result[i].Syllables) + " ");
-            }
+            //for (var i = 0; i < result.Count; i++)
+            //{
+            //    sb.Append(String.Join(Settings.SyllableSeparator, result[i].Syllables) + " ");
+            //}
+            sb.Append(String.Join(" ", result.Select(r => String.Join(Settings.SyllableSeparator, r.Syllables))));
 
             return sb.ToString();
         }
