@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Sklady.TextProcessors
@@ -9,11 +10,25 @@ namespace Sklady.TextProcessors
     public class PhoneticProcessor
     {
         private CharactersTable _table = CharactersTable.Instance;
+        private string[] dzPrefixes = new string[] { "під", "над", "від" };
 
         public string Process(string input)
         {
             var res = ProcessTwoSoundingLetters(input);
             res = ProcessDoubleConsonants(input);
+            res = ProcessDz(res);
+            res = AsymilativeReplacements(res);
+
+            return res;
+        }
+
+        private string AsymilativeReplacements(string res)
+        {
+            res = Regex.Replace(res, "^(с|з)(ш|ж)", "$2");
+            res = Regex.Replace(res, "(ч)(ц)", "$2");
+            res = Regex.Replace(res, "(т)(с)", "ц");
+            res = Regex.Replace(res, "(т)(ц)", "$2");
+            res = Regex.Replace(res, "(т)(ч)", "$2");
 
             return res;
         }
@@ -148,7 +163,8 @@ namespace Sklady.TextProcessors
                 indexOfJ = word.IndexOf('й', indexOfJ + 1);
             }
 
-            word = word.Replace("дж", "d").Replace("дз", "z");
+            word = word.Replace("дж", "d");
+            
 
             word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos           
 
@@ -162,6 +178,34 @@ namespace Sklady.TextProcessors
             }           
 
             return word;
+        }
+
+        private string ProcessDz(string word)
+        {
+            var indexOfDz = word.IndexOf("дз");
+
+            while (indexOfDz != -1)
+            {
+                if (HasPredefinedPreffix(word, indexOfDz))
+                {
+                    indexOfDz = word.IndexOf("дз", indexOfDz + 1);
+                }
+                else
+                {
+                    word = word.Remove(indexOfDz, 2).Insert(indexOfDz, "z");
+                    indexOfDz = word.IndexOf("дз", indexOfDz + 1);
+                }
+            }
+
+            return word;
+        }
+
+        private bool HasPredefinedPreffix(string word, int indexOfSound)
+        {
+            if (indexOfSound > 1 && this.dzPrefixes.Any(p => p == word.Substring(indexOfSound - 2, indexOfSound + 1)))
+                return true;
+
+            return false;
         }
 
         private string ReplaceAncientSymbols(string word)
