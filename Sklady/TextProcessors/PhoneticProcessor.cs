@@ -28,11 +28,16 @@ namespace Sklady.TextProcessors
         {
             res = Regex.Replace(res, "нтськ", "нск");
             res = Regex.Replace(res, "стськ", "ск");
-            res = Regex.Replace(res, "нтст", "нст");
+            res = Regex.Replace(res, "нтст", "нст");            
             res = Regex.Replace(res, "стц", "сц");
             res = Regex.Replace(res, "стч", "шч");
             res = Regex.Replace(res, "стд", "зд");
             res = Regex.Replace(res, "стс", "с");
+            res = Regex.Replace(res, "стн", "сн");
+            res = Regex.Replace(res, "нтс", "нс");
+            res = Regex.Replace(res, "нтс", "нс");            
+            res = Regex.Replace(res, "тст", "ц");
+            res = Regex.Replace(res, "тьс", "ц");            
 
             return res;
         }
