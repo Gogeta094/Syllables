@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Sklady.TextProcessors
@@ -12,6 +13,7 @@ namespace Sklady.TextProcessors
         {
             var res = ProcessTwoSoundingLetters(input);
             res = HandleRussianU(res);
+            res = ReductionReplacements(res);
 
             return res;
         }
@@ -22,9 +24,20 @@ namespace Sklady.TextProcessors
             input = ReplacePhoneticCharacter('я', "jа", input);        
             input = ReplacePhoneticCharacter('щ', "шч", input);     
             input = ReplacePhoneticCharacter('ё', "jе", input);
-            input = HandleRussianU(input);            
+            input = HandleRussianU(input);
+            input = ReplaceNextNonStableChar("ъ", input); // Replace vowel after solid sign
 
             return input;
+        }
+        private string ReductionReplacements(string res)
+        {
+            res = Regex.Replace(res, "стьд", "зд");
+            res = Regex.Replace(res, "нде", "не");
+            res = Regex.Replace(res, "зсс", "сс");
+            res = Regex.Replace(res, "стл", "сл");
+            res = Regex.Replace(res, "стн", "сн");
+
+            return res;
         }
 
         private string HandleRussianU(string input)
@@ -41,6 +54,6 @@ namespace Sklady.TextProcessors
             }
 
             return input;
-        }       
+        } 
     }
 }

@@ -70,7 +70,8 @@ namespace Sklady.TextProcessors
 
             word = word.Replace("дж", "d");
 
-            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos      
+            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos                 
+        
 
             return word;
         }
@@ -89,7 +90,7 @@ namespace Sklady.TextProcessors
                 .ToString();
         }
 
-        private string ReplaceNextNonStableChar(string symbol, string word)
+        protected string ReplaceNextNonStableChar(string symbol, string word)
         {
             var indexOfAp = word.IndexOf(symbol);
 

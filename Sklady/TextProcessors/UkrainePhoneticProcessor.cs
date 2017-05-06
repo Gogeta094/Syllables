@@ -103,6 +103,6 @@ namespace Sklady.TextProcessors
                 return true;
 
             return false;
-        }        
+        }
     }
 }

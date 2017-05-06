@@ -25,7 +25,19 @@ namespace Sklady
 
         public TextAnalyzer(string text, string fileName)
         {
-            _phoneticProcessor = new UkrainePhoneticProcessor();
+            switch (Settings.Language)
+            {
+                case Languages.Ukraine:
+                    _phoneticProcessor = new UkrainePhoneticProcessor();
+                    break;
+                case Languages.Russian:
+                    _phoneticProcessor = new RussianPhoneticProcessor();
+                    break;
+                case Languages.Ancient:
+                    _phoneticProcessor = new AncientPhoneticProcessor();
+                    break;
+            }
+            
             FileName = fileName;
             _wordAnalyzer = new WordAnalyzer();            
             PrepareText(text);
