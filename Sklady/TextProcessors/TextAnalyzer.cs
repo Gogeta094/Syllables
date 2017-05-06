@@ -15,7 +15,7 @@ namespace Sklady
         private string[] _words;
         private WordAnalyzer _wordAnalyzer;
         private CharactersTable table = CharactersTable.Instance;
-        private PhoneticProcessor _phoneticProcessor = new PhoneticProcessor();        
+        private PhoneticProcessorBase _phoneticProcessor;// = new PhoneticProcessor();        
 
         public string FileName { get; private set; }
         public int TextLength { get; private set; }
@@ -25,6 +25,7 @@ namespace Sklady
 
         public TextAnalyzer(string text, string fileName)
         {
+            _phoneticProcessor = new UkrainePhoneticProcessor();
             FileName = fileName;
             _wordAnalyzer = new WordAnalyzer();            
             PrepareText(text);

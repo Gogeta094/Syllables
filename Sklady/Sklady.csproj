@@ -83,6 +83,7 @@
       <DependentUpon>CharactersBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\FileProcessingResult.cs" />
+    <Compile Include="TextProcessors\AncientPhoneticProcessor.cs" />
     <Compile Include="TextProcessors\CharactersPowerTable.cs" />
     <Compile Include="Export\ResultsExporter.cs" />
     <Compile Include="Export\FileExportResults.cs" />
@@ -116,7 +117,9 @@
       <DependentUpon>TestView.cs</DependentUpon>
     </Compile>
     <Compile Include="TextProcessors\PhoneticProcessor.cs" />
+    <Compile Include="TextProcessors\RussianPhoneticProcessor.cs" />
     <Compile Include="TextProcessors\TextAnalyzer.cs" />
+    <Compile Include="TextProcessors\UkrainePhoneticProcessor.cs" />
     <Compile Include="TextProcessors\WordAnalyzer.cs" />
     <EmbeddedResource Include="CharactersBase.resx">
       <DependentUpon>CharactersBase.cs</DependentUpon>
