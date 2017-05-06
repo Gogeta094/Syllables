@@ -24,7 +24,7 @@ namespace Sklady
             cbCharactersTable.SelectedIndex = (int) Settings.CharactersTable;
             cbPhoneticsMode.Checked = Settings.PhoneticsMode;
             cbbLanguage.DataSource = new BindingList<string>(Enum.GetNames(typeof(Languages)));
-            cbbLanguage.SelectedItem = Settings.Language;
+            cbbLanguage.SelectedIndex = (int)Settings.Language;
         }
 
         private void button1_Click(object sender, EventArgs e)

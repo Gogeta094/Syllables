@@ -15,11 +15,11 @@ namespace Sklady.TextProcessors
         public string Process(string input)
         {
             var res = ProcessTwoSoundingLetters(input);
-            res = ProcessDoubleConsonants(input);
+            res = ProcessDoubleConsonants(res);
             res = ProcessDz(res);
             res = ReductionReplacements(res);
             res = AsymilativeReplacements(res);
-           
+
 
             return res;
         }
@@ -28,16 +28,16 @@ namespace Sklady.TextProcessors
         {
             res = Regex.Replace(res, "нтськ", "нск");
             res = Regex.Replace(res, "стськ", "ск");
-            res = Regex.Replace(res, "нтст", "нст");            
+            res = Regex.Replace(res, "нтст", "нст");
             res = Regex.Replace(res, "стц", "сц");
             res = Regex.Replace(res, "стч", "шч");
             res = Regex.Replace(res, "стд", "зд");
             res = Regex.Replace(res, "стс", "с");
             res = Regex.Replace(res, "стн", "сн");
             res = Regex.Replace(res, "нтс", "нс");
-            res = Regex.Replace(res, "нтс", "нс");            
+            res = Regex.Replace(res, "нтс", "нс");
             res = Regex.Replace(res, "тст", "ц");
-            res = Regex.Replace(res, "тьс", "ц");            
+            res = Regex.Replace(res, "тьс", "ц");
 
             return res;
         }
@@ -69,7 +69,7 @@ namespace Sklady.TextProcessors
         }
 
         public string Unprocess(string input)
-        {          
+        {
             var res = UnprocessTwoSoundingLetters(input);
 
             return res;
@@ -101,14 +101,29 @@ namespace Sklady.TextProcessors
             input = ReplacePhoneticCharacter('я', "jа", input);
             input = ReplacePhoneticCharacter('є', "jе", input);
             input = ReplacePhoneticCharacter('ї', "jі", input);
-            input = ReplacePhoneticCharacter('щ', "шч", input); 
+            input = ReplacePhoneticCharacter('щ', "шч", input);
 
             if (Settings.Language == Languages.Russian)
             {
                 input = ReplacePhoneticCharacter('ё', "jе", input);
-                input = ReplacePhoneticCharacter('и', "jи", input);
+                input = HandleRussianU(input);                
             }
-                
+
+            return input;
+        }
+
+        private string HandleRussianU(string input)
+        {
+            var indexOfU = input.IndexOf("и");
+
+            while (indexOfU != -1)
+            {
+                if (indexOfU > 0 && input[indexOfU - 1] == 'ь')
+                {
+                    input = input.Remove(indexOfU, 1).Insert(indexOfU, "jи");
+                }
+                indexOfU = input.IndexOf("и", indexOfU + 1);
+            }
 
             return input;
         }
@@ -164,7 +179,7 @@ namespace Sklady.TextProcessors
                 if (indexOfJ == 0)
                 {
                     word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
-                    indexOfJ = word.IndexOf('й', indexOfJ + 1);                    
+                    indexOfJ = word.IndexOf('й', indexOfJ + 1);
 
                     continue;
                 }
@@ -185,7 +200,7 @@ namespace Sklady.TextProcessors
             }
 
             word = word.Replace("дж", "d");
-            
+
 
             word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos           
 
@@ -196,7 +211,7 @@ namespace Sklady.TextProcessors
             else
             {
                 word = ReplaceNextNonStableChar("ъ", word); // Replace vowel after solid sign
-            }           
+            }
 
             return word;
         }
