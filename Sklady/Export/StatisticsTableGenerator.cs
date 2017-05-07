@@ -76,7 +76,7 @@ namespace Sklady.Export
             var res = new List<double>();
 
             var CVVSyllablesStatistics = new List<double>();
-            var CandVSums = GetCVCounts(fileResult.ReadableResults);            
+            var CandVSums = GetCVCounts(fileResult);           
 
             foreach (var header in _cvvHeaders)
             {
@@ -100,25 +100,38 @@ namespace Sklady.Export
             res.Insert(0, fileResult.TextLength);            
 
             return res;
-        }
+        }       
 
-        private List<double> GetCVCounts(List<AnalyzeResults> readableResults)
+        private List<double> GetCVCounts(FileProcessingResult fileResult)
         {
             var CCount = 0.0;
             var VCount = 0.0;
+            var openSyllables = 0.0;
+            var closedSyllables = 0.0;
 
-            foreach(var item in readableResults)
+            foreach(var item in fileResult.ReadableResults)
             {
                 for (var i = 0; i < item.Syllables.Length; i++)
                 {
                     CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c));
                     VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c));
+
+                    if (_charactersTable.isConsonant(item.Syllables[i].Last()))
+                    {
+                        closedSyllables++;
+                    }
+                    else
+                    {
+                        openSyllables++;
+                    }
                 }
             }
 
             var CtoV = CCount / VCount;
+            openSyllables = openSyllables / fileResult.SyllablesCount;
+            closedSyllables = closedSyllables / fileResult.SyllablesCount;
 
-            return new List<double>() { CCount, VCount, CtoV };
+            return new List<double>() { CCount, VCount, CtoV, openSyllables, closedSyllables };
         }
 
         private List<int> GenerateStatisticsSummary(List<int> input)
@@ -132,7 +145,7 @@ namespace Sklady.Export
         private List<string> GenerateTableHeader()
         {
             var res = new List<string>();
-            res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V" });
+            res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V", "Opened", "Closed" });
             res.AddRange(_cvvHeaders);
 
             return res;

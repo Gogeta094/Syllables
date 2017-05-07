@@ -94,7 +94,7 @@ namespace Sklady
                         Syllables = UnprocessPhonetics(syllables)
                     });
 
-                    OnWordAnalyzed?.Invoke(i, _words.Length - 1, FileName);
+                    OnWordAnalyzed?.Invoke(i + 1, _words.Length, FileName);
                 }
                 catch (Exception ex)
                 {
