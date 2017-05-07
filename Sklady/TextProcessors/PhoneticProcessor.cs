@@ -59,11 +59,11 @@ namespace Sklady.TextProcessors
                     break;
                 }
 
-
-                if (!CharactersTable.isConsonant(word[indexOfJ - 1]) && CharactersTable.isConsonant(word[indexOfJ + 1]))
-                {
-                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
-                }
+                word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
+                //if (!CharactersTable.isConsonant(word[indexOfJ - 1]) && CharactersTable.isConsonant(word[indexOfJ + 1]))
+                //{
+                    
+                //}
 
                 indexOfJ = word.IndexOf('й', indexOfJ + 1);
             }

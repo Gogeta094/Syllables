@@ -68,18 +68,23 @@ namespace Sklady
         {
             var result = new FileProcessingResult();
 
-            for (var i = 0; i < _words.Length; i++)
-            {
-                if (Settings.PhoneticsMode)
-                    _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
+            //for (var i = 0; i < _words.Length; i++)
+            //{
+            //    if (Settings.PhoneticsMode)
+            //        _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
 
-                _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
-            }
+            //    _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
+            //}
 
             for (var i = 0; i < _words.Length; i++)
             {
                 try
                 {
+                    if (Settings.PhoneticsMode)
+                        _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
+
+                    _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
+
                     var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
 
                     result.CvvResults.Add(new AnalyzeResults()
