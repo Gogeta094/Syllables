@@ -39,12 +39,13 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cbbLanguage = new System.Windows.Forms.ComboBox();
             this.cbPhoneticsMode = new System.Windows.Forms.CheckBox();
+            this.cbAbsoluteMeasures = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // tbSeparator
             // 
             this.tbSeparator.Location = new System.Drawing.Point(16, 48);
-            this.tbSeparator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbSeparator.Margin = new System.Windows.Forms.Padding(4);
             this.tbSeparator.Name = "tbSeparator";
             this.tbSeparator.Size = new System.Drawing.Size(205, 22);
             this.tbSeparator.TabIndex = 0;
@@ -61,8 +62,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 301);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(12, 316);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 28);
             this.button1.TabIndex = 2;
@@ -72,8 +73,8 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(120, 301);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Location = new System.Drawing.Point(121, 316);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 3;
@@ -88,7 +89,7 @@
             "c-cc",
             "cc-c"});
             this.cbSeparationMode.Location = new System.Drawing.Point(16, 103);
-            this.cbSeparationMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbSeparationMode.Margin = new System.Windows.Forms.Padding(4);
             this.cbSeparationMode.Name = "cbSeparationMode";
             this.cbSeparationMode.Size = new System.Drawing.Size(205, 24);
             this.cbSeparationMode.TabIndex = 4;
@@ -120,7 +121,7 @@
             "Table 1",
             "Table 2"});
             this.cbCharactersTable.Location = new System.Drawing.Point(16, 162);
-            this.cbCharactersTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbCharactersTable.Margin = new System.Windows.Forms.Padding(4);
             this.cbCharactersTable.Name = "cbCharactersTable";
             this.cbCharactersTable.Size = new System.Drawing.Size(205, 24);
             this.cbCharactersTable.TabIndex = 6;
@@ -159,11 +160,22 @@
             this.cbPhoneticsMode.Text = "Phonetics mode";
             this.cbPhoneticsMode.UseVisualStyleBackColor = true;
             // 
+            // cbAbsoluteMeasures
+            // 
+            this.cbAbsoluteMeasures.AutoSize = true;
+            this.cbAbsoluteMeasures.Location = new System.Drawing.Point(15, 288);
+            this.cbAbsoluteMeasures.Name = "cbAbsoluteMeasures";
+            this.cbAbsoluteMeasures.Size = new System.Drawing.Size(159, 21);
+            this.cbAbsoluteMeasures.TabIndex = 13;
+            this.cbAbsoluteMeasures.Text = "Absolute measures?";
+            this.cbAbsoluteMeasures.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(239, 341);
+            this.ClientSize = new System.Drawing.Size(239, 353);
+            this.Controls.Add(this.cbAbsoluteMeasures);
             this.Controls.Add(this.cbPhoneticsMode);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cbbLanguage);
@@ -175,7 +187,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbSeparator);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SettingsForm";
             this.Text = "SettingsForm";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
@@ -197,5 +209,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbbLanguage;
         private System.Windows.Forms.CheckBox cbPhoneticsMode;
+        private System.Windows.Forms.CheckBox cbAbsoluteMeasures;
     }
 }

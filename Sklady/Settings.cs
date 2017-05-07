@@ -23,6 +23,8 @@ namespace Sklady
         public static string LastOpenFolderPath = "";
         public static string LastSaveFolderPath = "";
 
+        public static bool AbsoluteMeasures = false;
+
         public static List<string> CharactersToRemove = new List<string>
             {
                 "!",

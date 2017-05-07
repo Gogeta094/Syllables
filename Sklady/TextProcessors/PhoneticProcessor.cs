@@ -76,7 +76,7 @@ namespace Sklady.TextProcessors
             return word;
         }
 
-        public string RemoveTechnicalCharacters(string word)
+        public virtual string RemoveTechnicalCharacters(string word)
         {
             return new StringBuilder(word)
                 .Replace('w', 'в')
@@ -84,9 +84,7 @@ namespace Sklady.TextProcessors
                 .Replace('j', 'й')
                 .Replace('Y', 'й')
                 .Replace("d", "дж")
-                .Replace("z", "дз")
-                .Replace("s", "ъ")
-                .Replace("m", "ь")
+                .Replace("z", "дз")                        
                 .ToString();
         }
 

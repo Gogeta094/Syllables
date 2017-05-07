@@ -25,6 +25,7 @@ namespace Sklady
             cbPhoneticsMode.Checked = Settings.PhoneticsMode;
             cbbLanguage.DataSource = new BindingList<string>(Enum.GetNames(typeof(Languages)));
             cbbLanguage.SelectedIndex = (int)Settings.Language;
+            cbAbsoluteMeasures.Checked = Settings.AbsoluteMeasures;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,6 +35,7 @@ namespace Sklady
             Settings.CharactersTable = (Table) cbCharactersTable.SelectedIndex;
             Settings.PhoneticsMode = cbPhoneticsMode.Checked;
             Settings.Language = (Languages)cbbLanguage.SelectedIndex;
+            Settings.AbsoluteMeasures = cbAbsoluteMeasures.Checked;
 
             this.Close();
         }

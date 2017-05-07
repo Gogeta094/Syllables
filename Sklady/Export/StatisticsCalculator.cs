@@ -10,12 +10,12 @@ namespace Sklady.Export
     {        
         private List<double> _weights;
 
-        public StatisticsCalculator(List<int> lengths)
+        public StatisticsCalculator(List<double> lengths)
         {     
             _weights = CalculateWeights(lengths);
         }
 
-        private List<double> CalculateWeights(List<int> lengths)
+        private List<double> CalculateWeights(List<double> lengths)
         {
             var weights = new List<double>();
 
@@ -28,7 +28,7 @@ namespace Sklady.Export
             return weights;
         }
 
-        public double GetWeightedAvarage(List<int> data)
+        public double GetWeightedAvarage(List<double> data)
         {
             var result = 0.0;            
 
@@ -40,7 +40,7 @@ namespace Sklady.Export
             return result;
         }
 
-        public double GetWeightedDelta(List<int> data)
+        public double GetWeightedDelta(List<double> data)
         {
             var result = 0.0;
 

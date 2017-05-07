@@ -18,7 +18,7 @@ namespace Sklady.Export
 
         private ResultsExporter()
         {
-            _statisticsTableGenerator = new StatisticsTableGenerator();
+            _statisticsTableGenerator = new StatisticsTableGenerator(Settings.AbsoluteMeasures);
         }
 
         public static ResultsExporter Instance

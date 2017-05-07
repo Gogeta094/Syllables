@@ -11,9 +11,12 @@ namespace Sklady.Export
     {
         private List<string> _cvvHeaders;
         private StatisticsCalculator _statisticsCalculator;
+        private bool _useAbsoluteValues = false;
+        private CharactersTable _charactersTable = CharactersTable.Instance;
 
-        public StatisticsTableGenerator()
-        {            
+        public StatisticsTableGenerator(bool useAbsoluteMeasures = false)
+        {
+            _useAbsoluteValues = useAbsoluteMeasures;
         }
 
         public string GetTableString(List<FileProcessingResult> results)
@@ -25,7 +28,7 @@ namespace Sklady.Export
             sb.AppendLine(String.Join(",", headerItems));
 
 
-            var filesStatistics = new List<List<int>>();
+            var filesStatistics = new List<List<double>>();
 
             foreach (var resItem in results)
             {
@@ -38,23 +41,23 @@ namespace Sklady.Export
             var groupedStatistics = GroupByMeasure(filesStatistics);
             _statisticsCalculator = new StatisticsCalculator(groupedStatistics[0]); // at 0 position we have list of file lengths
 
-            var avg = groupedStatistics.Select(c => _statisticsCalculator.GetWeightedAvarage(c));
+            var avg = groupedStatistics.Select(c => String.Format("{0:0.00}", _statisticsCalculator.GetWeightedAvarage(c)));
             sb.AppendLine(String.Format("{0},{1}", "Average", String.Join(",", avg)));
 
-            var weightedDelta = groupedStatistics.Select(c => _statisticsCalculator.GetWeightedDelta(c));
+            var weightedDelta = groupedStatistics.Select(c => String.Format("{0:0.00}", _statisticsCalculator.GetWeightedDelta(c)));
             sb.AppendLine(String.Format("{0},{1}", "Avg Square Delta", String.Join(",", weightedDelta)));
 
             return sb.ToString();
         }
 
-        private List<List<int>> GroupByMeasure(List<List<int>> fileStatistics)
+        private List<List<double>> GroupByMeasure(List<List<double>> fileStatistics)
         {
             var count = fileStatistics.First().Count; // all list should have the same count
-            var res = new List<List<int>>();
+            var res = new List<List<double>>();
 
             for (var i = 0; i < count; i++)
             {
-                res.Add(new List<int>());
+                res.Add(new List<double>());
             }
 
             for (var i = 0; i < count; i++)
@@ -68,26 +71,54 @@ namespace Sklady.Export
             return res;
         }
 
-        private List<int> GenerateStatistics(FileProcessingResult fileResult)
+        private List<double> GenerateStatistics(FileProcessingResult fileResult)
         {
-            var res = new List<int>();
+            var res = new List<double>();
 
-            res.Add(fileResult.TextLength);
-            res.Add(fileResult.SyllablesCount);
+            var CVVSyllablesStatistics = new List<double>();
+            var CandVSums = GetCVCounts(fileResult.ReadableResults);            
 
             foreach (var header in _cvvHeaders)
             {
                 if (fileResult.CvvStatistics.ContainsKey(header))
                 {
-                    res.Add(fileResult.CvvStatistics[header]);
+                    CVVSyllablesStatistics.Add(fileResult.CvvStatistics[header]);
                 }
                 else
                 {
-                    res.Add(0);
+                    CVVSyllablesStatistics.Add(0);
                 }
             }
 
+            if (!_useAbsoluteValues)
+                CVVSyllablesStatistics = CVVSyllablesStatistics.Select(r => (double) r / fileResult.SyllablesCount).ToList();
+
+            res.AddRange(CandVSums);
+            res.AddRange(CVVSyllablesStatistics);
+
+            res.Insert(0, fileResult.SyllablesCount);
+            res.Insert(0, fileResult.TextLength);            
+
             return res;
+        }
+
+        private List<double> GetCVCounts(List<AnalyzeResults> readableResults)
+        {
+            var CCount = 0.0;
+            var VCount = 0.0;
+
+            foreach(var item in readableResults)
+            {
+                for (var i = 0; i < item.Syllables.Length; i++)
+                {
+                    CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c));
+                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c));
+                }
+            }
+
+            var CtoV = CCount / VCount;
+
+            return new List<double>() { CCount, VCount, CtoV };
         }
 
         private List<int> GenerateStatisticsSummary(List<int> input)
@@ -101,7 +132,7 @@ namespace Sklady.Export
         private List<string> GenerateTableHeader()
         {
             var res = new List<string>();
-            res.AddRange(new string[] { "Text", "Length", "SyllablesCount" });
+            res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V" });
             res.AddRange(_cvvHeaders);
 
             return res;
@@ -117,24 +148,6 @@ namespace Sklady.Export
             }
 
             _cvvHeaders = cvvSet.ToList();
-        }
-
-
-        //public List<int> GetWeightedAvg(List<List<int>> inputData)
-        //{
-        //    var res = new List<int>();
-
-        //    var temporary = new int[inputData[0].Count, inputData.Count];
-
-        //    for (var i = 0; i < inputData.Count; i++)
-        //    {
-        //        for (var j = 0; j < inputData[i].Count; j++)
-        //        {
-        //            temporary[j, i] = inputData[i][j];
-        //        }
-        //    }            
-
-        //    return res;
-        //}
+        }       
     }
 }

@@ -182,7 +182,9 @@ namespace Sklady
                 new Character() { CharacterValue = 'ђ', Power = -1 },
                 new Character() { CharacterValue = 'Ђ', Power = -1 },
                 new Character() { CharacterValue = 'ё', Power = -1 },
-                new Character() { CharacterValue = 'ӕ', Power = -1 }//ӕ
+                new Character() { CharacterValue = 'ӕ', Power = -1 },//ӕ
+                new Character() { CharacterValue = 'Ü', Power = -1 },
+                new Character() { CharacterValue = 'b', Power = -1 }
             };
         }
 

@@ -11,7 +11,7 @@ namespace Sklady.TextProcessors
     {
         public override string Process(string input)
         {
-            var res = HandleI(input); 
+            var res = HandleI(input);
             res = ReplaceAncientSymbols(res);
 
             return res;
@@ -33,8 +33,20 @@ namespace Sklady.TextProcessors
             res = Regex.Replace(res, "іу", "jу");
             res = Regex.Replace(res, "іі", "jі");
             res = Regex.Replace(res, "я", "jа");
-            res = Regex.Replace(res, "ьі", "ы");
+            res = Regex.Replace(res, "ьі", "b");
             res = Regex.Replace(res, "оу", "Ü");
+
+            return res;
+        }
+
+        public override string RemoveTechnicalCharacters(string word)
+        {
+            var res = base.RemoveTechnicalCharacters(word);
+
+            res.Replace("Ü", "оу")
+                .Replace("s", "ъ")
+                .Replace("m", "ь")
+                .Replace("b", "ьі");
 
             return res;
         }
