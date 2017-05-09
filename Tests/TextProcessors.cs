@@ -15,8 +15,8 @@ namespace Tests
         public void TestPhonetics()
         {
             var settings = new Settings();
-            var export = new ResultsExporter(settings.CharactersTable, settings);
-            var analyzer = new TextAnalyzer("вирісши", "", settings, settings.CharactersTable, export);
+            var export = new ResultsExporter(settings);
+            var analyzer = new TextAnalyzer("вирісши", "", settings, export);
 
             var res = analyzer.GetResults();
 

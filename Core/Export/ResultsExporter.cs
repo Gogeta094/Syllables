@@ -19,10 +19,10 @@ namespace Sklady.Export
 
         private Settings _settings;
 
-        public ResultsExporter(CharactersTable charactersTable, Settings settings)
+        public ResultsExporter(Settings settings)
         {
             _settings = settings;
-            _charsTable = charactersTable; 
+            _charsTable = settings.CharactersTable; 
             _statisticsTableGenerator = new StatisticsTableGenerator(settings.SeparateAfterFirst);
         }
         

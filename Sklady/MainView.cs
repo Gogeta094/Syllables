@@ -69,13 +69,13 @@ namespace Sklady
                 SyllableSeparator = GlobalSettings.SyllableSeparator
             };
 
-            _export = new ResultsExporter(charsTable, settings);
+            _export = new ResultsExporter(settings);
             _export.OnFileCvvItemCalculated += _export_OnFileCvvItemCalculated;
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
             {
-                var textAnalyzer = new TextAnalyzer(InputData[i].Text, InputData[i].FileName, settings, charsTable, _export);
+                var textAnalyzer = new TextAnalyzer(InputData[i].Text, InputData[i].FileName, settings, _export);
 
                 textAnalyzer.OnWordAnalyzed += Analyzer_OnWordAnalyzed;
                 textAnalyzer.OnErrorOccured += Analyzer_OnErrorOccured;

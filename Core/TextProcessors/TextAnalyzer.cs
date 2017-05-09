@@ -26,9 +26,9 @@ namespace Sklady
         public event Action<int, int, string> OnWordAnalyzed;
         public event Action<Exception, string, string> OnErrorOccured;
 
-        public TextAnalyzer(string text, string fileName, Settings settings, CharactersTable table, ResultsExporter exporter)
+        public TextAnalyzer(string text, string fileName, Settings settings, ResultsExporter exporter)
         {
-            this.table = table;
+            this.table = settings.CharactersTable;
             this.settings = settings;
             this.exporter = exporter;
 

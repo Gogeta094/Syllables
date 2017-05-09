@@ -36,9 +36,9 @@ namespace Sklady
                 SyllableSeparator = GlobalSettings.SyllableSeparator
             };
 
-            var export = new ResultsExporter(GlobalSettings.CharactersTable, settings);
+            var export = new ResultsExporter(settings);
             var text = richTextBox1.Text;
-            var analyzer = new TextAnalyzer(richTextBox1.Text, "", settings, GlobalSettings.CharactersTable, export);
+            var analyzer = new TextAnalyzer(richTextBox1.Text, "", settings, export);
 
             var result = analyzer.GetResults();
             var resText = export.GetSyllables(result.ReadableResults);
