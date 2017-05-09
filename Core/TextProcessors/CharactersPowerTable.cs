@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,47 +15,56 @@ namespace Sklady
         private List<Character> _table1;
         private List<Character> _table2;
 
-        private List<Character> _selectedTable;
+        private List<Character> _currentTable;
 
-        private CharactersTable()
+        private Table selectedTable;
+
+        public Table SelectedTable
+        {
+            get
+            {
+                return selectedTable;
+            }
+            set
+            {
+                ChangeTable(value);
+                selectedTable = value;
+            }
+        }
+
+        
+        public CharactersTable(Table selectedTable)
         {
             _vowel = GetVowelCharacters();
             _table1 = GetFirstTable();
             _table2 = GetSecondTable();
-            _selectedTable = Settings.CharactersTable == Table.Table1 ? _table1 : _table2;
-        }
-
-        public static CharactersTable Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new CharactersTable();
-                }
-
-                return _instance;
-            }
+            SelectedTable = selectedTable;
+            _currentTable = SelectedTable == Table.Table1 ? _table1 : _table2;
         }
 
         public bool isConsonant(char character)
         {
-            return GetConsonantsTable().Any(c => c.CharacterValue == character);
+            return _currentTable.Any(c => c.CharacterValue == character);
         }
 
         public Character Get(char character)
         {
-            return GetConsonantsTable().Union(_vowel).SingleOrDefault(c => c.CharacterValue == character);
+            return _currentTable.Union(_vowel).SingleOrDefault(c => c.CharacterValue == character);
         }
 
         public int GetPower(char character)
         {
-            return GetConsonantsTable().Union(_vowel).Single(c => c.CharacterValue == character).Power;
+            return _currentTable.Union(_vowel).Single(c => c.CharacterValue == character).Power;
+        }
+
+        private void ChangeTable(Table table)
+        {
+            _currentTable = table == Table.Table1 ? _table1 : _table2;
         }
 
         public List<Character> GetConsonants()
         {
-            return _selectedTable;
+            return _currentTable;
         }
 
         public List<Character> GetVowels()
@@ -64,25 +74,13 @@ namespace Sklady
 
         public void Add(Character character)
         {
-            this.GetConsonantsTable().Add(character);
+            _currentTable.Add(character);
         }
 
         public void Remove(char character)
         {
-            this.GetConsonantsTable().RemoveAll(c => c.CharacterValue == character);
-        }
-
-        private List<Character> GetConsonantsTable()
-        {
-            if (Settings.CharactersTable == Table.Table1)
-            {
-                _selectedTable = _table1;
-                return _table1;
-            }
-
-            _selectedTable = _table2;
-            return _table2;
-        }
+           _currentTable.RemoveAll(c => c.CharacterValue == character);
+        }        
 
         private List<Character> GetFirstTable()
         {

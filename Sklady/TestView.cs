@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sklady.Export;
+using Sklady.Models;
 
 namespace Sklady
 {
@@ -22,9 +23,22 @@ namespace Sklady
         {
             richTextBox2.Clear();
 
-            var export = ResultsExporter.Instance;
+            var settings = new Settings()
+            {
+                AbsoluteMeasures = GlobalSettings.AbsoluteMeasures,
+                CharactersTable = GlobalSettings.CharactersTable,
+                CharactersToRemove = GlobalSettings.CharactersToRemove,
+                Language = GlobalSettings.Language,
+                LastOpenFolderPath = GlobalSettings.LastOpenFolderPath,
+                LastSaveFolderPath = GlobalSettings.LastSaveFolderPath,
+                PhoneticsMode = GlobalSettings.PhoneticsMode,
+                SeparateAfterFirst = GlobalSettings.SeparateAfterFirst,
+                SyllableSeparator = GlobalSettings.SyllableSeparator
+            };
+
+            var export = new ResultsExporter(GlobalSettings.CharactersTable, settings);
             var text = richTextBox1.Text;
-            var analyzer = new TextAnalyzer(richTextBox1.Text, "");
+            var analyzer = new TextAnalyzer(richTextBox1.Text, "", settings, GlobalSettings.CharactersTable, export);
 
             var result = analyzer.GetResults();
             var resText = export.GetSyllables(result.ReadableResults);

@@ -9,6 +9,10 @@ namespace Sklady.TextProcessors
 {
     public class AncientPhoneticProcessor : PhoneticProcessorBase
     {
+        public AncientPhoneticProcessor(CharactersTable charactersTable) : base(charactersTable)
+        {
+        }
+
         public override string Process(string input)
         {
             var res = HandleI(input);

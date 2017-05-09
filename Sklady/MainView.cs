@@ -23,8 +23,8 @@ namespace Sklady
         public event Action<ExportResults> OnFilesProcessed;
         private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
 
-        private CharactersTable charsTable = CharactersTable.Instance;
-        private ResultsExporter _export = ResultsExporter.Instance;
+        private CharactersTable charsTable = GlobalSettings.CharactersTable;
+        private ResultsExporter _export; 
 
         private List<InputFileModel> _inputData;
         public List<InputFileModel> InputData
@@ -56,11 +56,27 @@ namespace Sklady
                 MessageBox.Show("No text file selected.");
                 return;
             }
+            var settings = new Settings()
+            {
+                AbsoluteMeasures = GlobalSettings.AbsoluteMeasures,
+                CharactersTable = GlobalSettings.CharactersTable,
+                CharactersToRemove = GlobalSettings.CharactersToRemove,
+                Language = GlobalSettings.Language,
+                LastOpenFolderPath = GlobalSettings.LastOpenFolderPath,
+                LastSaveFolderPath = GlobalSettings.LastSaveFolderPath,
+                PhoneticsMode = GlobalSettings.PhoneticsMode,
+                SeparateAfterFirst = GlobalSettings.SeparateAfterFirst,
+                SyllableSeparator = GlobalSettings.SyllableSeparator
+            };
+
+            _export = new ResultsExporter(charsTable, settings);
+            _export.OnFileCvvItemCalculated += _export_OnFileCvvItemCalculated;
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
             {
-                var textAnalyzer = new TextAnalyzer(InputData[i].Text, InputData[i].FileName);
+                var textAnalyzer = new TextAnalyzer(InputData[i].Text, InputData[i].FileName, settings, charsTable, _export);
+
                 textAnalyzer.OnWordAnalyzed += Analyzer_OnWordAnalyzed;
                 textAnalyzer.OnErrorOccured += Analyzer_OnErrorOccured;
 
@@ -203,7 +219,7 @@ namespace Sklady
 
         private void MainView_Load(object sender, EventArgs e)
         {
-            _export.OnFileCvvItemCalculated += _export_OnFileCvvItemCalculated;
+           
         }
 
         private void _export_OnFileCvvItemCalculated(int totalCvvItems, int totalFiles)

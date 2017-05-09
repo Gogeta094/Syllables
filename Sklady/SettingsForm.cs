@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,23 +20,23 @@ namespace Sklady
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            tbSeparator.Text = Settings.SyllableSeparator;
-            cbSeparationMode.SelectedIndex = Settings.SeparateAfterFirst ? 0 : 1;
-            cbCharactersTable.SelectedIndex = (int) Settings.CharactersTable;
-            cbPhoneticsMode.Checked = Settings.PhoneticsMode;
+            tbSeparator.Text = GlobalSettings.SyllableSeparator;
+            cbSeparationMode.SelectedIndex = GlobalSettings.SeparateAfterFirst ? 0 : 1;
+            cbCharactersTable.SelectedIndex = (int) GlobalSettings.CharactersTable.SelectedTable;
+            cbPhoneticsMode.Checked = GlobalSettings.PhoneticsMode;
             cbbLanguage.DataSource = new BindingList<string>(Enum.GetNames(typeof(Languages)));
-            cbbLanguage.SelectedIndex = (int)Settings.Language;
-            cbAbsoluteMeasures.Checked = Settings.AbsoluteMeasures;
+            cbbLanguage.SelectedIndex = (int)GlobalSettings.Language;
+            cbAbsoluteMeasures.Checked = GlobalSettings.AbsoluteMeasures;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Settings.SyllableSeparator = tbSeparator.Text;
-            Settings.SeparateAfterFirst = cbSeparationMode.SelectedText.Equals("c-cc");
-            Settings.CharactersTable = (Table) cbCharactersTable.SelectedIndex;
-            Settings.PhoneticsMode = cbPhoneticsMode.Checked;
-            Settings.Language = (Languages)cbbLanguage.SelectedIndex;
-            Settings.AbsoluteMeasures = cbAbsoluteMeasures.Checked;
+            GlobalSettings.SyllableSeparator = tbSeparator.Text;
+            GlobalSettings.SeparateAfterFirst = cbSeparationMode.SelectedText.Equals("c-cc");
+            GlobalSettings.CharactersTable.SelectedTable = (Table) cbCharactersTable.SelectedIndex;
+            GlobalSettings.PhoneticsMode = cbPhoneticsMode.Checked;
+            GlobalSettings.Language = (Languages)cbbLanguage.SelectedIndex;
+            GlobalSettings.AbsoluteMeasures = cbAbsoluteMeasures.Checked;
 
             this.Close();
         }

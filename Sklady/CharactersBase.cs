@@ -17,7 +17,7 @@ namespace Sklady
             InitializeComponent();
         }
 
-        private CharactersTable charsTable = CharactersTable.Instance;
+        private CharactersTable charsTable = GlobalSettings.CharactersTable;
         private BindingList<Character> _consonants;
         private BindingList<Character> _vowels;
         private BindingList<string> _charsToRemove;
@@ -26,7 +26,7 @@ namespace Sklady
         {
             _consonants = new BindingList<Character>(charsTable.GetConsonants());
             _vowels = new BindingList<Character>(charsTable.GetVowels());
-            _charsToRemove = new BindingList<string>(Settings.CharactersToRemove);
+            _charsToRemove = new BindingList<string>(GlobalSettings.CharactersToRemove);
 
 
             listBox1.DataSource = _consonants;

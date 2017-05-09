@@ -55,6 +55,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{affc008e-c860-4277-af95-fe6f8d1cf27d}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sklady\Sklady.csproj">
       <Project>{8cc41d66-49b8-4ccb-9739-f5ce68fc3cc5}</Project>
       <Name>Sklady</Name>

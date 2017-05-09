@@ -26,14 +26,12 @@ namespace Sklady
         {
             _exportResults = result;
             UpdateSaveButton(result.FileExportResults);
-        }
-
-        private ResultsExporter _export = ResultsExporter.Instance;
+        }       
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = Settings.LastOpenFolderPath;
+            dialog.SelectedPath = GlobalSettings.LastOpenFolderPath;
             dialog.Description = "Open folder with text files.";
 
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -56,14 +54,14 @@ namespace Sklady
                 mainView1.InputData = texts;
             }
 
-            Settings.LastOpenFolderPath = dialog.SelectedPath;
+            GlobalSettings.LastOpenFolderPath = dialog.SelectedPath;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var folderDialog = new FolderBrowserDialog();
             folderDialog.Description = "Save results to folder.";
-            folderDialog.SelectedPath = Settings.LastSaveFolderPath;
+            folderDialog.SelectedPath = GlobalSettings.LastSaveFolderPath;
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {                
@@ -80,7 +78,7 @@ namespace Sklady
                 SaveCvv(_exportResults.StatisticsTableCsv, folderDialog.SelectedPath);
             }
 
-            Settings.LastSaveFolderPath = folderDialog.SelectedPath;
+            GlobalSettings.LastSaveFolderPath = folderDialog.SelectedPath;
         }
 
         private void SaveCvv(string statisticsTableCsv, string path)

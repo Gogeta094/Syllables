@@ -9,6 +9,10 @@ namespace Sklady.TextProcessors
 {
     public class RussianPhoneticProcessor : PhoneticProcessorBase
     {
+        public RussianPhoneticProcessor(CharactersTable charactersTable) : base(charactersTable)
+        {
+        }
+
         public override string Process(string input)
         {
             var res = ProcessTwoSoundingLetters(input);

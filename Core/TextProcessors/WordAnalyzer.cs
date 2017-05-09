@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sklady.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,14 @@ namespace Sklady
 {
     public class WordAnalyzer
     {
-        CharactersTable table = CharactersTable.Instance;
+        CharactersTable table;
+        private Settings settings;
+
+        public WordAnalyzer(CharactersTable table, Settings settings)
+        {
+            this.table = table;
+            this.settings = settings;
+        }
 
         public string[] GetSyllables(string word)
         {
@@ -98,7 +106,7 @@ namespace Sklady
 
                     if (syllableIndex == -1) // if there is no increasing sequence
                     {
-                        if (Settings.SeparateAfterFirst)
+                        if (settings.SeparateAfterFirst)
                         {
                             syllableIndex = firstVowelIndex + 2;
                         }

@@ -11,6 +11,10 @@ namespace Sklady.TextProcessors
     {
         private string[] dzPrefixes = new string[] { "під", "над", "від" };
 
+        public UkrainePhoneticProcessor(CharactersTable charactersTable) : base(charactersTable)
+        {
+        }
+
         public override string Process(string input)
         {
             var res = ProcessTwoSoundingLetters(input);
