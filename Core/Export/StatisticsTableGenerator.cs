@@ -115,8 +115,10 @@ namespace Sklady.Export
             {
                 for (var i = 0; i < item.Syllables.Length; i++)
                 {
-                    CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c));
-                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c));
+                    var YCount = item.Syllables[i].Count(c => c == 'Y');
+
+                    CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c)) - 0.5 * YCount; // as we're counting Y as 0.5V 
+                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * YCount; // and 0.5C we have to make corresponding calculations
 
                     if (_charactersTable.isConsonant(item.Syllables[i].Last()))
                     {
@@ -134,15 +136,7 @@ namespace Sklady.Export
             closedSyllables = closedSyllables / fileResult.SyllablesCount;
 
             return new List<double>() { CCount, VCount, CtoV, openSyllables, closedSyllables };
-        }
-
-        private List<int> GenerateStatisticsSummary(List<int> input)
-        {
-            var result = new List<int>();
-
-
-            return result;
-        }
+        }       
 
         private List<string> GenerateTableHeader()
         {
@@ -163,6 +157,6 @@ namespace Sklady.Export
             }
 
             _cvvHeaders = cvvSet.ToList();
-        }       
+        }
     }
 }

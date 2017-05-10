@@ -46,27 +46,27 @@ namespace Sklady.TextProcessors
                 indexOfV = word.IndexOf('в', indexOfV + 1);
             }
 
+            word = Regex.Replace(word, "йд", "Yд");
+            word = Regex.Replace(word, "йт", "Yт");
+
             var indexOfJ = word.IndexOf('й');
 
             while (indexOfJ != -1)
             {
-                if (indexOfJ == 0)
+
+                if (indexOfJ > 0
+                    && indexOfJ != word.Length - 1
+                    && !CharactersTable.isConsonant(word[indexOfJ - 1]) 
+                    && CharactersTable.isConsonant(word[indexOfJ + 1]))
+                {
+                     word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
+                }
+                else
                 {
                     word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
-                    indexOfJ = word.IndexOf('й', indexOfJ + 1);
-
-                    continue;
                 }
 
-                if (indexOfJ == word.Length - 1 || indexOfJ == word.Length)
-                {
-                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
-                    break;
-                }
-
-                word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");              
-
-                indexOfJ = word.IndexOf('й', indexOfJ + 1);
+                indexOfJ = word.IndexOf('й', indexOfJ + 1);               
             }
 
             word = word.Replace("дж", "d");
@@ -80,10 +80,10 @@ namespace Sklady.TextProcessors
         public virtual string RemoveTechnicalCharacters(string word)
         {
             return new StringBuilder(word)
-                .Replace('w', 'в')
-                .Replace('u', 'в')
-                .Replace('j', 'й')
-                .Replace('Y', 'й')
+                //.Replace('w', 'в')
+                //.Replace('u', 'в')
+                //.Replace('j', 'й')
+                //.Replace('Y', 'й')
                 .Replace("d", "дж")
                 .Replace("z", "дз")                        
                 .ToString();
