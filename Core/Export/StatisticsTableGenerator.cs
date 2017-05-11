@@ -11,9 +11,12 @@ namespace Sklady.Export
     public class StatisticsTableGenerator
     {
         private List<string> _cvvHeaders;
+        private List<string> _repetitionsHeaders;
+
         private StatisticsCalculator _statisticsCalculator;
         private bool _useAbsoluteValues = false;
         private CharactersTable _charactersTable;
+        
 
         public StatisticsTableGenerator(bool useAbsoluteMeasures = false)
         {
@@ -25,6 +28,7 @@ namespace Sklady.Export
         {
             var sb = new StringBuilder();
             ProcessCVVHeaders(results);
+            ProcessRepetitionsHeaders(results);
 
             var headerItems = GenerateTableHeader();
             sb.AppendLine(String.Join(",", headerItems));
@@ -50,7 +54,7 @@ namespace Sklady.Export
             sb.AppendLine(String.Format("{0},{1}", "Avg Square Delta", String.Join(",", weightedDelta)));
 
             return sb.ToString();
-        }
+        }       
 
         private List<List<double>> GroupByMeasure(List<List<double>> fileStatistics)
         {
@@ -78,6 +82,7 @@ namespace Sklady.Export
             var res = new List<double>();
 
             var CVVSyllablesStatistics = new List<double>();
+            var RepetitionsStatistics = new List<double>();
             var CandVSums = GetCVCounts(fileResult);           
 
             foreach (var header in _cvvHeaders)
@@ -92,11 +97,24 @@ namespace Sklady.Export
                 }
             }
 
+            foreach (var header in _repetitionsHeaders)
+            {
+                if (fileResult.Repetitions.ContainsKey(header))
+                {
+                    RepetitionsStatistics.Add(fileResult.Repetitions[header]);
+                }
+                else
+                {
+                    RepetitionsStatistics.Add(0);
+                }
+            }
+
             if (!_useAbsoluteValues)
                 CVVSyllablesStatistics = CVVSyllablesStatistics.Select(r => (double) r / fileResult.SyllablesCount).ToList();
 
             res.AddRange(CandVSums);
             res.AddRange(CVVSyllablesStatistics);
+            res.AddRange(RepetitionsStatistics);
 
             res.Insert(0, fileResult.SyllablesCount);
             res.Insert(0, fileResult.TextLength);            
@@ -143,6 +161,7 @@ namespace Sklady.Export
             var res = new List<string>();
             res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V", "Opened", "Closed" });
             res.AddRange(_cvvHeaders);
+            res.AddRange(_repetitionsHeaders);
 
             return res;
         }
@@ -157,6 +176,18 @@ namespace Sklady.Export
             }
 
             _cvvHeaders = cvvSet.ToList();
+        }
+
+        private void ProcessRepetitionsHeaders(List<FileProcessingResult> results)
+        {
+            var repetitions = new SortedSet<string>();
+
+            foreach (var item in results)
+            {
+                repetitions.UnionWith(item.Repetitions.Select(c => c.Key));
+            }
+
+            _repetitionsHeaders = repetitions.ToList();
         }
     }
 }

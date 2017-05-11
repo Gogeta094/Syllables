@@ -19,6 +19,7 @@ namespace Sklady.Models
             ReadableResults = new List<AnalyzeResults>();
             CvvResults = new List<AnalyzeResults>();
             this.exporter = exporter;
+            this.Repetitions = new Dictionary<string, int>();
         }
 
         public List<AnalyzeResults> ReadableResults { get; set; }
@@ -51,6 +52,8 @@ namespace Sklady.Models
                 return ReadableResults.Sum(r => r.Syllables.Length);
             }
         }
+
+        public Dictionary<string, int> Repetitions { get; set; }
 
         public Dictionary<string, int> CvvStatistics
         {

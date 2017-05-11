@@ -79,6 +79,8 @@ namespace Sklady
             {
                 try
                 {
+                    UpdateRepetitions(result.Repetitions, _words[i]);                    
+
                     if (settings.PhoneticsMode)
                         _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
 
@@ -109,6 +111,23 @@ namespace Sklady
             result.FileName = this.FileName;
 
             return result;
+        }
+
+        private void UpdateRepetitions(Dictionary<string, int> repetitions, string word)
+        {
+            var match = Regex.Match(word, @"([а-яА-Я])\1+");
+
+            if (match.Success)
+            {
+                if (!repetitions.ContainsKey(match.Value))
+                {
+                    repetitions.Add(match.Value, 1);
+                }
+                else
+                {
+                    repetitions[match.Value]++;
+                }
+            }                     
         }
 
         private string[] UnprocessPhonetics(string[] syllabeles)

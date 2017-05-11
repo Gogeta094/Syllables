@@ -58,14 +58,7 @@ namespace Sklady.TextProcessors
 
         private string ProcessDoubleConsonants(string input)
         {
-            for (var i = 0; i < input.Length - 1; i++)
-            {
-                if (input[i] == input[i + 1]
-                    && CharactersTable.isConsonant(input[i]))
-                {
-                    input = input.Remove(i + 1, 1);
-                }
-            }
+            input = Regex.Replace(input, @"([а-яА-Я])\1+", "$1");          
 
             return input;
         }
