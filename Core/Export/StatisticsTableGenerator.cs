@@ -133,10 +133,10 @@ namespace Sklady.Export
             {
                 for (var i = 0; i < item.Syllables.Length; i++)
                 {
-                    var YCount = item.Syllables[i].Count(c => c == 'Y');
+                    var HalfCharsCount = item.Syllables[i].Count(c => c == 'Y' || c == 'u');
 
-                    CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c)) - 0.5 * YCount; // as we're counting Y as 0.5V 
-                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * YCount; // and 0.5C we have to make corresponding calculations
+                    CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c)) - 0.5 * HalfCharsCount; // as we're counting Y as 0.5V 
+                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * HalfCharsCount; // and 0.5C we have to make corresponding calculations
 
                     if (_charactersTable.isConsonant(item.Syllables[i].Last()))
                     {
