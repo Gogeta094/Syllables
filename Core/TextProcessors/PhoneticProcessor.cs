@@ -17,77 +17,38 @@ namespace Sklady.TextProcessors
         }
 
         public abstract string Process(string input);
+        public abstract string RemoveTechnicalCharacters(string word);
 
         public string ProcessNonStableCharacters(string word)
         {
-            var indexOfV = word.IndexOf('в');
+            word = ProcessJ(word);
+            //word = word.Replace("дж", "d");
+            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos
 
-            while (indexOfV != -1)
-            {
-                if (indexOfV == 0)
-                {
-                    indexOfV = word.IndexOf('в', indexOfV + 1);
-                    continue;
-                }
-                if (indexOfV == word.Length - 1 || indexOfV == word.Length)
-                {
-                    break;
-                }
+            return word;
+        }
 
-                if (!CharactersTable.isConsonant(word[indexOfV - 1]) && CharactersTable.isConsonant(word[indexOfV + 1]))
-                {
-                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
-                }
-                else if (CharactersTable.isConsonant(word[indexOfV - 1]) && !CharactersTable.isConsonant(word[indexOfV + 1]))
-                {
-                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "w");
-                }
-
-                indexOfV = word.IndexOf('в', indexOfV + 1);
-            }
-
-            word = Regex.Replace(word, "йд", "Yд");
-            word = Regex.Replace(word, "йт", "Yт");
-
+        public string ProcessJ(string word)
+        {
             var indexOfJ = word.IndexOf('й');
 
             while (indexOfJ != -1)
             {
 
-                if (indexOfJ > 0
-                    && indexOfJ != word.Length - 1
-                    && !CharactersTable.isConsonant(word[indexOfJ - 1]) 
-                    && CharactersTable.isConsonant(word[indexOfJ + 1]))
-                {
-                     word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
-                }
-                else
+                if (indexOfJ != word.Length - 1
+                    && !CharactersTable.isConsonant(word[indexOfJ + 1]))
                 {
                     word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "j");
                 }
+                else
+                {
+                    word = word.Remove(indexOfJ, 1).Insert(indexOfJ, "Y");
+                }
 
-                indexOfJ = word.IndexOf('й', indexOfJ + 1);               
+                indexOfJ = word.IndexOf('й', indexOfJ + 1);
             }
-
-            word = word.Replace("дж", "d");
-
-            word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos                 
-        
-
             return word;
-        }
-
-        public virtual string RemoveTechnicalCharacters(string word)
-        {
-            return new StringBuilder(word)
-                //.Replace('w', 'в')
-                //.Replace('u', 'в')
-                //.Replace('j', 'й')
-                //.Replace('Y', 'й')
-                .Replace("d", "дж")
-                .Replace("z", "дз")                        
-                .ToString();
-        }
+        }        
 
         protected string ReplaceNextNonStableChar(string symbol, string word)
         {

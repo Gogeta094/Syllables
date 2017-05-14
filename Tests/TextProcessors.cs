@@ -19,11 +19,11 @@ namespace Tests
             var analyzer = new TextAnalyzer("туристський", "", settings, export);
             var res = analyzer.GetResults();
 
-            Assert.AreEqual("ту-ри-скиj", export.GetSyllables(res.ReadableResults));
+            Assert.AreEqual("ту-ри-скиY", export.GetSyllables(res.ReadableResults));
 
             analyzer = new TextAnalyzer("студентський", "", settings, export);
             res = analyzer.GetResults();
-            Assert.AreEqual("сту-ден-скиj", export.GetSyllables(res.ReadableResults));
+            Assert.AreEqual("сту-ден-скиY", export.GetSyllables(res.ReadableResults));
 
             analyzer = new TextAnalyzer("йод", "", settings, export);
             res = analyzer.GetResults();

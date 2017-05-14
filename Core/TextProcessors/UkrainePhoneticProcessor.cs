@@ -19,11 +19,18 @@ namespace Sklady.TextProcessors
         {
             var res = ProcessTwoSoundingLetters(input);
             res = ProcessDoubleConsonants(res);
-            res = ProcessDz(res);
+            res = ProcessDzDj(res);
             res = ReductionReplacements(res);
             res = AsymilativeReplacements(res);
+            res = ProcessV(res);
 
             return res;
+        }
+
+        public override string RemoveTechnicalCharacters(string word)
+        {
+            return word.Replace("d", "дж")
+                       .Replace("z", "дз");
         }
 
         private string ReductionReplacements(string res)
@@ -58,7 +65,7 @@ namespace Sklady.TextProcessors
 
         private string ProcessDoubleConsonants(string input)
         {
-            input = Regex.Replace(input, @"([а-яА-Я])\1+", "$1");          
+            input = Regex.Replace(input, @"([а-яА-Я])\1+", "$1");
 
             return input;
         }
@@ -69,13 +76,15 @@ namespace Sklady.TextProcessors
             input = ReplacePhoneticCharacter('я', "jа", input);
             input = ReplacePhoneticCharacter('є', "jе", input);
             input = ReplacePhoneticCharacter('ї', "jі", input);
-            input = ReplacePhoneticCharacter('щ', "шч", input);
+            input = Regex.Replace(input, "щ", "шч");
 
             return input;
         }
 
-        private string ProcessDz(string word)
+        private string ProcessDzDj(string word)
         {
+            word = word.Replace("дж", "d");
+
             var indexOfDz = word.IndexOf("дз");
 
             while (indexOfDz != -1)
@@ -92,6 +101,47 @@ namespace Sklady.TextProcessors
             }
 
             return word;
+        }
+
+        public string ProcessV(string word)
+        {
+            var indexOfV = word.IndexOf('в');
+
+            while (indexOfV != -1)
+            {
+                if (IsFirstOrHasVowelBefore(word, indexOfV) && IsLastOrHasConsonantAfter(word, indexOfV))
+                {
+                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
+                }
+                else if (HasConsonantBeforeAndVowelAfter(word, indexOfV))
+                {
+                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "w");
+                }
+                else
+                {
+                    //word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
+                }
+
+                indexOfV = word.IndexOf('в', indexOfV + 1);
+            }
+
+            return word;
+        }
+
+        private bool IsFirstOrHasVowelBefore(string word, int indexOfV)
+        {
+            return indexOfV == 0 || !CharactersTable.isConsonant(word[indexOfV - 1]);
+        }
+
+        private bool IsLastOrHasConsonantAfter(string word, int indexOfV)
+        {
+            return indexOfV == word.Length - 1 || CharactersTable.isConsonant(word[indexOfV + 1]);
+        }
+
+        private bool HasConsonantBeforeAndVowelAfter(string word, int indexOfV)
+        {
+            return (indexOfV != 0 && CharactersTable.isConsonant(word[indexOfV - 1]))
+                   && (indexOfV != word.Length - 1 && !CharactersTable.isConsonant(word[indexOfV + 1]));
         }
 
         private bool HasPredefinedPreffix(string word, int indexOfSound)

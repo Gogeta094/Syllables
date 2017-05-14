@@ -69,8 +69,7 @@ namespace Sklady
                 SyllableSeparator = GlobalSettings.SyllableSeparator
             };
 
-            _export = new ResultsExporter(settings);
-            _export.OnFileCvvItemCalculated += _export_OnFileCvvItemCalculated;
+            _export = new ResultsExporter(settings);            
 
             var analyzers = new List<TextAnalyzer>();
             for (var i = 0; i < InputData.Count; i++)
@@ -96,7 +95,7 @@ namespace Sklady
                     fileProcessingResults.Add(res);
                     
                     UpdateProcessingPanel(true);
-
+                  
                     exportResult.FileExportResults.Add(new FileExportResults()
                     {
                         Syllables = _export.GetSyllables(res.ReadableResults),
@@ -105,7 +104,7 @@ namespace Sklady
                         SyllablesFirstCVV = _export.GetSyllablesFirstCVV(res.CvvResults),
                         FileName = textAnalyzer.FileName
                     });
-                    
+                    UpdateMainProgressBar(analyzers.Count);
                 });
 
                 exportResult.StatisticsTableCsv = _export.GetStatisticsTableCsv(fileProcessingResults);
@@ -222,19 +221,19 @@ namespace Sklady
            
         }
 
-        private void _export_OnFileCvvItemCalculated(int totalCvvItems, int totalFiles)
+        private void UpdateMainProgressBar(int total)
         {
             if (progressBar1.InvokeRequired)
             {
                 progressBar1.Invoke((MethodInvoker)delegate ()
                 {
-                    progressBar1.Maximum = totalCvvItems * totalFiles;
+                    progressBar1.Maximum = total;
                     progressBar1.Value += 1;
                 });
             }
             else
             {
-                progressBar1.Maximum = totalCvvItems * totalFiles;
+                progressBar1.Maximum = total;
                 progressBar1.Value += 1;
             }
         }

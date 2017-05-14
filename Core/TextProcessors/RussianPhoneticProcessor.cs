@@ -15,8 +15,7 @@ namespace Sklady.TextProcessors
 
         public override string Process(string input)
         {
-            var res = ProcessTwoSoundingLetters(input);
-            res = HandleRussianU(res);
+            var res = ProcessTwoSoundingLetters(input);            
             res = ReductionReplacements(res);
 
             return res;
@@ -58,6 +57,11 @@ namespace Sklady.TextProcessors
             }
 
             return input;
-        } 
+        }
+
+        public override string RemoveTechnicalCharacters(string word)
+        {
+            return word;
+        }
     }
 }
