@@ -16,11 +16,12 @@ namespace WebService.Controllers
         [HttpPost]
         public ResultViewModel GetTextProcessingResult(string inputText, Settings settings)
         {
+            if (settings == null)
+                settings = new Settings();
+
             var exporter = new ResultsExporter(settings);
             var analyzer = new TextAnalyzer(inputText, String.Empty, settings, exporter);
-            var result = analyzer.GetResults();
-
-            
+            var result = analyzer.GetResults();            
 
             return new ResultViewModel()
             {

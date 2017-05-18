@@ -31,6 +31,8 @@ namespace Sklady.Export
             var sb = new StringBuilder();
             var res = result.Select(r => r).ToList();
 
+            res = TakeOnlyFirstSyllable(result);
+
             for (var i = 0; i < res.Count; i++)
             {
                 sb.Append(String.Join(_settings.SyllableSeparator, res[i].Syllables) + " ");
@@ -43,13 +45,7 @@ namespace Sklady.Export
         {
             var sb = new StringBuilder();
             var res = result.Select(r => r).ToList();
-
-            res = TakeOnlyFirstSyllable(result);
-
-            //for (var i = 0; i < result.Count; i++)
-            //{
-            //    sb.Append(String.Join(Settings.SyllableSeparator, result[i].Syllables) + " ");
-            //}
+            
             sb.Append(String.Join(" ", result.Select(r => String.Join(_settings.SyllableSeparator, r.Syllables))));
 
             return sb.ToString();

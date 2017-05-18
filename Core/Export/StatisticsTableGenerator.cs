@@ -110,7 +110,7 @@ namespace Sklady.Export
             }
 
             if (!_useAbsoluteValues)
-                CVVSyllablesStatistics = CVVSyllablesStatistics.Select(r => (double) r / fileResult.SyllablesCount).ToList();
+                CVVSyllablesStatistics = CVVSyllablesStatistics.Select(r => (double) r / fileResult .SyllablesCount).ToList();
 
             res.AddRange(CandVSums);
             res.AddRange(CVVSyllablesStatistics);
