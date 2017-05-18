@@ -59,20 +59,28 @@ namespace Sklady
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            const string SyllablesFolderName = "Syllables";
+            const string FirstSyllablesFolderName = "FirstSyllables";
+            const string SyllablesCVVFolderName = "SyllablesCVV";
+            const string FirstSyllablesCVVFolderName = "FirstSyllablesCVV";
+
             var folderDialog = new FolderBrowserDialog();
             folderDialog.Description = "Save results to folder.";
             folderDialog.SelectedPath = GlobalSettings.LastSaveFolderPath;
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
-            {                
+            {
+                var syllablesDirectory = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, SyllablesFolderName)).FullName;
+                var syllablesFirstDirectory = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, FirstSyllablesFolderName)).FullName;
+                var syllablesCVVDirectory = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, SyllablesCVVFolderName)).FullName;
+                var syllablesFirstCVVDirectory = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, FirstSyllablesCVVFolderName)).FullName;
+
                 foreach (var fileResult in _exportResults.FileExportResults)
                 {
-                    var directoryPath = Directory.CreateDirectory(Path.Combine(folderDialog.SelectedPath, fileResult.FileName)).FullName;
-
-                    SaveFile(fileResult.Syllables, directoryPath, "Syllables.txt");
-                    SaveFile(fileResult.FirstSyllables, directoryPath, "FirstSyllables.txt");
-                    SaveFile(fileResult.SyllablesCVV, directoryPath, "SyllablesCVV.txt");
-                    SaveFile(fileResult.SyllablesFirstCVV, directoryPath, "SyllablesFirstCVV.txt");
+                    SaveFile(fileResult.Syllables, syllablesDirectory, fileResult.FileName);
+                    SaveFile(fileResult.FirstSyllables, syllablesFirstDirectory, fileResult.FileName);
+                    SaveFile(fileResult.SyllablesCVV, syllablesCVVDirectory, fileResult.FileName);
+                    SaveFile(fileResult.SyllablesFirstCVV, syllablesFirstCVVDirectory, fileResult.FileName);
                 }
 
                 SaveCvv(_exportResults.StatisticsTableCsv, folderDialog.SelectedPath);
