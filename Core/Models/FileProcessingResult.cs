@@ -20,6 +20,7 @@ namespace Sklady.Models
             CvvResults = new List<AnalyzeResults>();
             this.exporter = exporter;
             this.Repetitions = new Dictionary<string, int>();
+            this.Letters = new Dictionary<char, int>();
         }
 
         public List<AnalyzeResults> ReadableResults { get; set; }
@@ -54,6 +55,8 @@ namespace Sklady.Models
         }
 
         public Dictionary<string, int> Repetitions { get; set; }
+
+        public Dictionary<char, int> Letters { get; set; }
 
         public Dictionary<string, int> CvvStatistics
         {

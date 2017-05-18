@@ -113,7 +113,9 @@ namespace Sklady
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResult);
-            });
+            });         
+
+            
         }
 
         private void UpdateProcessingPanel(bool visible)

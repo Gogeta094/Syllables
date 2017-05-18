@@ -34,7 +34,7 @@ namespace Sklady.TextProcessors
         private string HandleJ(string input)
         {
             var res = Regex.Replace(input, "іо", "jо");
-            res = Regex.Replace(res, "є", "je");
+            res = Regex.Replace(res, "є", "jе");
             res = Regex.Replace(res, "ю", "jу");
             res = Regex.Replace(res, "я", "jа");
             res = Regex.Replace(res, "іа", "jа");

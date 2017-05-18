@@ -3,6 +3,7 @@ using Sklady.Models;
 using Sklady.TextProcessors;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,6 +13,8 @@ namespace Sklady
 {
     public class TextAnalyzer
     {
+        private Stopwatch _stopWatch = new Stopwatch();
+        public long ElapsedToCountWords { get { return _stopWatch.ElapsedMilliseconds; } }
         private string _text;
         private string[] _words;
         private WordAnalyzer _wordAnalyzer;
@@ -87,6 +90,8 @@ namespace Sklady
 
                     _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
 
+                    UpdateLetters(result.Letters, _words[i]);
+
                     var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
 
                     result.CvvResults.Add(new AnalyzeResults()
@@ -112,6 +117,23 @@ namespace Sklady
             result.FileName = this.FileName;
 
             return result;
+        }
+
+        private void UpdateLetters(Dictionary<char, int> letters, string word)
+        {
+            _stopWatch.Start();
+            for (var i = 0; i < word.Length; i++)
+            {
+                if (letters.ContainsKey(word[i]))
+                {
+                    letters[word[i]] += 1;
+                }
+                else
+                {
+                    letters[word[i]] = 1;
+                }
+            }
+            _stopWatch.Stop();
         }
 
         private void UpdateRepetitions(Dictionary<string, int> repetitions, string word)
