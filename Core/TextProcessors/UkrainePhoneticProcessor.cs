@@ -119,7 +119,7 @@ namespace Sklady.TextProcessors
                 }
                 else
                 {
-                    //word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
+                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "v");
                 }
 
                 indexOfV = word.IndexOf('в', indexOfV + 1);
@@ -146,7 +146,7 @@ namespace Sklady.TextProcessors
 
         private bool HasPredefinedPreffix(string word, int indexOfSound)
         {
-            if (indexOfSound > 1 && this.dzPrefixes.Any(p => p == word.Substring(indexOfSound - 2, indexOfSound + 1)))
+            if (indexOfSound > 1 && this.dzPrefixes.Any(p => p == word.Substring(indexOfSound - 2, p.Length)))
                 return true;
 
             return false;

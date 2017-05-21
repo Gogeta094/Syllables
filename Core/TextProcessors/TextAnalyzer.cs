@@ -121,9 +121,9 @@ namespace Sklady
 
         private void UpdateLetters(Dictionary<char, int> letters, string word)
         {
-            _stopWatch.Start();
+            _stopWatch.Start();           
             for (var i = 0; i < word.Length; i++)
-            {
+            {                
                 if (letters.ContainsKey(word[i]))
                 {
                     letters[word[i]] += 1;

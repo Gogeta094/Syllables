@@ -85,7 +85,7 @@ namespace Sklady.TextProcessors
                 }
                 else
                 {
-                    //word = word.Remove(indexOfV, 1).Insert(indexOfV, "u");
+                    word = word.Remove(indexOfV, 1).Insert(indexOfV, "v");
                 }
 
                 indexOfV = word.IndexOf('в', indexOfV + 1);
@@ -115,7 +115,7 @@ namespace Sklady.TextProcessors
             return word.Replace("Ü", "оу")
                        .Replace("s", "ъ")
                        .Replace("m", "ь")
-                       .Replace("b", "ьі");         
+                       .Replace("b", "ьі"); 
         }
     }
 }
