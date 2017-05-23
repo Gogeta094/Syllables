@@ -17,7 +17,14 @@ namespace Sklady.TextProcessors
         {
             var res = HandleJ(input);
             res = HandleSolidAndSoftSigns(res);
-            res = ReplaceAncientSymbols(res);            
+            res = ReplaceAncientSymbols(res);    
+
+            return res;
+        }
+
+        public override string ProcessNonStableCharacters(string word)
+        {
+            var res = base.ProcessNonStableCharacters(word);
             res = ProcessV(res);
 
             return res;
@@ -49,7 +56,7 @@ namespace Sklady.TextProcessors
             res = Regex.Replace(res, "іы", "jы");
             res = Regex.Replace(res, "иы", "jы");            
             
-            //res = Regex.Replace(res, "оу", "Ü");
+            res = Regex.Replace(res, "оу", "у");
             res = Regex.Replace(res, "йе", "jе");
             res = Regex.Replace(res, "йа", "jа");
             res = Regex.Replace(res, "йу", "jу");

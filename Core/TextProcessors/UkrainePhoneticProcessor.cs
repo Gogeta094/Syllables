@@ -21,8 +21,7 @@ namespace Sklady.TextProcessors
             res = ProcessDoubleConsonants(res);
             res = ProcessDzDj(res);
             res = ReductionReplacements(res);
-            res = AsymilativeReplacements(res);
-            res = ProcessV(res);
+            res = AsymilativeReplacements(res);            
 
             return res;
         }
@@ -30,7 +29,20 @@ namespace Sklady.TextProcessors
         public override string RemoveTechnicalCharacters(string word)
         {
             return word.Replace("d", "дж")
-                       .Replace("z", "дз");
+                       .Replace("z", "дз")
+                       .Replace("v", "в")
+                       .Replace("w", "в")
+                       .Replace("u", "в")
+                       .Replace("j", "й")
+                       .Replace("Y", "й");
+        }
+
+        public override string ProcessNonStableCharacters(string word)
+        {
+            var res = base.ProcessNonStableCharacters(word);
+            res = ProcessV(res);
+
+            return res;
         }
 
         private string ReductionReplacements(string res)

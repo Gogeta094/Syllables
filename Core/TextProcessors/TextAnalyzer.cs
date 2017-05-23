@@ -103,7 +103,7 @@ namespace Sklady
                     result.ReadableResults.Add(new AnalyzeResults()
                     {
                         Word = _words[i],
-                        Syllables = UnprocessPhonetics(syllables)
+                        Syllables = settings.PhoneticsMode ? syllables : UnprocessPhonetics(syllables)
                     });
 
                     OnWordAnalyzed?.Invoke(i + 1, _words.Length, FileName);
@@ -124,6 +124,11 @@ namespace Sklady
             _stopWatch.Start();           
             for (var i = 0; i < word.Length; i++)
             {                
+                if (word[i] == '\'')
+                {
+                    continue;
+                }
+
                 if (letters.ContainsKey(word[i]))
                 {
                     letters[word[i]] += 1;
@@ -157,8 +162,7 @@ namespace Sklady
         {
             for (var i = 0; i < syllabeles.Length; i++)
             {
-                syllabeles[i] = _phoneticProcessor.RemoveTechnicalCharacters(syllabeles[i]);               
-                //syllabeles[i] = _phoneticProcessor.Unprocess(syllabeles[i]);
+                syllabeles[i] = _phoneticProcessor.RemoveTechnicalCharacters(syllabeles[i]);
             }
 
             return syllabeles;

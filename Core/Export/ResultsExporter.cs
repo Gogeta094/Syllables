@@ -23,7 +23,7 @@ namespace Sklady.Export
         {
             _settings = settings;
             _charsTable = settings.CharactersTable; 
-            _statisticsTableGenerator = new StatisticsTableGenerator(settings.SeparateAfterFirst);
+            _statisticsTableGenerator = new StatisticsTableGenerator(settings.AbsoluteMeasures);
         }
         
         public string GetFirstSyllables(List<AnalyzeResults> result)

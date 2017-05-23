@@ -19,7 +19,7 @@ namespace Sklady.TextProcessors
         public abstract string Process(string input);
         public abstract string RemoveTechnicalCharacters(string word);
 
-        public string ProcessNonStableCharacters(string word)
+        public virtual string ProcessNonStableCharacters(string word)
         {
             word = ProcessJ(word);
             //word = word.Replace("дж", "d");

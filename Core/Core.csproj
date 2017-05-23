@@ -62,5 +62,8 @@
     <Compile Include="TextProcessors\UkrainePhoneticProcessor.cs" />
     <Compile Include="TextProcessors\WordAnalyzer.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
