@@ -42,7 +42,8 @@ namespace Sklady.Models
         {
             get
             {
-                return ReadableResults.Sum(r => r.Word.Length);
+                return Letters.Sum(c => c.Value);
+                //return ReadableResults.Sum(r => r.Word.Length);
             }
         }
 
