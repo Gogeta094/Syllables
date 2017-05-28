@@ -33,7 +33,8 @@ namespace Sklady
                 LastSaveFolderPath = GlobalSettings.LastSaveFolderPath,
                 PhoneticsMode = GlobalSettings.PhoneticsMode,
                 SeparateAfterFirst = GlobalSettings.SeparateAfterFirst,
-                SyllableSeparator = GlobalSettings.SyllableSeparator
+                SyllableSeparator = GlobalSettings.SyllableSeparator,
+                CharsToSkip = GlobalSettings.CharsToSkip
             };
 
             var export = new ResultsExporter(settings);

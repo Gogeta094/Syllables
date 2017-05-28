@@ -66,7 +66,8 @@ namespace Sklady
                 LastSaveFolderPath = GlobalSettings.LastSaveFolderPath,
                 PhoneticsMode = GlobalSettings.PhoneticsMode,
                 SeparateAfterFirst = GlobalSettings.SeparateAfterFirst,
-                SyllableSeparator = GlobalSettings.SyllableSeparator
+                SyllableSeparator = GlobalSettings.SyllableSeparator,
+                CharsToSkip = GlobalSettings.CharsToSkip                
             };
 
             _export = new ResultsExporter(settings);            

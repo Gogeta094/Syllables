@@ -46,6 +46,7 @@
     <Compile Include="Export\ResultsExporter.cs" />
     <Compile Include="Export\StatisticsCalculator.cs" />
     <Compile Include="Export\StatisticsTableGenerator.cs" />
+    <Compile Include="Helpers\RegexBuilder.cs" />
     <Compile Include="Models\AnalyzeResults.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\FileProcessingResult.cs" />

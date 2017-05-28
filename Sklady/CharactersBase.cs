@@ -21,17 +21,19 @@ namespace Sklady
         private BindingList<Character> _consonants;
         private BindingList<Character> _vowels;
         private BindingList<string> _charsToRemove;
+        private BindingList<char> _charsToSkip;
 
         private void CharactersBase_Load(object sender, EventArgs e)
         {
             _consonants = new BindingList<Character>(charsTable.GetConsonants());
             _vowels = new BindingList<Character>(charsTable.GetVowels());
             _charsToRemove = new BindingList<string>(GlobalSettings.CharactersToRemove);
-
+            _charsToSkip = new BindingList<char>(GlobalSettings.CharsToSkip);
 
             listBox1.DataSource = _consonants;
             listBox2.DataSource = _vowels;
             listBox3.DataSource = _charsToRemove;
+            listBox4.DataSource = _charsToSkip;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -133,6 +135,34 @@ namespace Sklady
         {
             var selected = listBox3.SelectedIndex;
             _charsToRemove.RemoveAt(selected);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            char value = ' ';
+
+            try
+            {
+                value = Char.Parse(tbCharToSkip.Text);
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return;
+            }
+
+            if (_charsToSkip.Any(c => c == value))
+            {
+                MessageBox.Show("Character already registered.");
+                return;
+            }
+
+            _charsToSkip.Add(value);
+        }
+
+        private void btnRemoveCharToSkip_Click(object sender, EventArgs e)
+        {
+            var selected = listBox4.SelectedIndex;
+            _charsToSkip.RemoveAt(selected);
         }
     }
 }

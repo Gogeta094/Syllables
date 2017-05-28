@@ -159,6 +159,12 @@ namespace Sklady.Export
                     CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c)) - 0.5 * HalfCharsCount; // as we're counting Y as 0.5V 
                     VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * HalfCharsCount; // and 0.5C we have to make corresponding calculations
 
+                    if (_useAbsoluteValues)
+                    {
+                        CCount = CCount / fileResult.TextLength;
+                        VCount = VCount / fileResult.TextLength;
+                    }
+
                     if (_charactersTable.isConsonant(item.Syllables[i].Last()))
                     {
                         closedSyllables++;

@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 namespace Sklady.Models
 {
     public class Settings
-    {
-       
-
+    {      
         public bool SeparateAfterFirst { get; set; }
         public string SyllableSeparator { get; set; }
         public CharactersTable CharactersTable { get; set; }
@@ -20,6 +18,7 @@ namespace Sklady.Models
         public string LastSaveFolderPath { get; set; }
         public bool AbsoluteMeasures { get; set; }
         public List<string> CharactersToRemove { get; set; }
+        public List<char> CharsToSkip { get; set; }
 
         public Settings()
         {
@@ -31,6 +30,7 @@ namespace Sklady.Models
             LastSaveFolderPath = "";
             AbsoluteMeasures = false;
             CharactersTable = new CharactersTable(Table.Table1);
+            CharsToSkip = new List<char>();
             CharactersToRemove = new List<string>()
             {
                 "!",

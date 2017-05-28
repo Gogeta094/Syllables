@@ -104,6 +104,7 @@ namespace Sklady
                 new Character() {CharacterValue = 'з', Power = 2},
                 new Character() {CharacterValue = 'ж', Power = 2},
                 new Character() {CharacterValue = 'v', Power = 2},
+                new Character() {CharacterValue = 'в', Power = 2},
                 new Character() {CharacterValue = 'к', Power = 3},
                 new Character() {CharacterValue = 'п', Power = 3},
                 new Character() {CharacterValue = 'т', Power = 3},

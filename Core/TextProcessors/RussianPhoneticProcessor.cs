@@ -24,9 +24,10 @@ namespace Sklady.TextProcessors
         private string ProcessTwoSoundingLetters(string input)
         {
             input = ReplacePhoneticCharacter('ю', "jу", input);
-            input = ReplacePhoneticCharacter('я', "jа", input);        
-            input = ReplacePhoneticCharacter('щ', "шч", input);     
-            input = ReplacePhoneticCharacter('ё', "jе", input);
+            input = ReplacePhoneticCharacter('я', "jа", input);
+            input = ReplacePhoneticCharacter('е', "jэ", input);
+            input = ReplacePhoneticCharacter('ё', "jо", input);
+            input = Regex.Replace(input, "щ", "шч");
             input = HandleRussianU(input);
             input = ReplaceNextNonStableChar("ъ", input); // Replace vowel after solid sign
 

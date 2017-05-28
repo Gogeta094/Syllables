@@ -64,9 +64,11 @@ namespace Sklady.TextProcessors
         }
 
         private string AsymilativeReplacements(string res)
-        {
-            res = Regex.Replace(res, "^(с|з)(ш|ж)", "$2");
+        {                 
             res = Regex.Replace(res, "(с)(ш)", "$2");
+            res = Regex.Replace(res, "(з)(ж)", "$2");
+            res = Regex.Replace(res, "^(з)(ш)", "$2");
+            res = Regex.Replace(res, "(ш)(с)", "$2");
             res = Regex.Replace(res, "(ч)(ц)", "$2");
             res = Regex.Replace(res, "(т)(с)", "ц");
             res = Regex.Replace(res, "(т)(ц)", "$2");
@@ -86,8 +88,8 @@ namespace Sklady.TextProcessors
         {
             input = ReplacePhoneticCharacter('ю', "jу", input);
             input = ReplacePhoneticCharacter('я', "jа", input);
-            input = ReplacePhoneticCharacter('є', "jе", input);
-            input = ReplacePhoneticCharacter('ї', "jі", input);
+            input = ReplacePhoneticCharacter('є', "jе", input);            
+            input = Regex.Replace(input, "ї", "jі");
             input = Regex.Replace(input, "щ", "шч");
 
             return input;

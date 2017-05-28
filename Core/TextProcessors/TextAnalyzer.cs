@@ -1,4 +1,5 @@
-﻿using Sklady.Export;
+﻿using Core.Helpers;
+using Sklady.Export;
 using Sklady.Models;
 using Sklady.TextProcessors;
 using System;
@@ -54,23 +55,23 @@ namespace Sklady
         }
 
         private void PrepareText(string inputText)
-        {
-            //_text = Regex.Replace(inputText.ToLower(), @"\.|\!|\?|\,|\(|\)|\[|\]|\*|\'|\«|\»|[a-zA-Z]|[0-9]|\:|\;|\—|\""|\<|\>|\=|\+|\/|\\|\{|\}|\#|\@|\||_", "", RegexOptions.Multiline | RegexOptions.IgnoreCase); // remove special characters                 
+        {            
             var sb = new StringBuilder(inputText.ToLower());
+
             for (var i = 0; i < settings.CharactersToRemove.Count; i++) // Remove all unnecesarry characters
             {
                 sb.Replace(settings.CharactersToRemove[i], "");
             }
+
             _text = sb.ToString();
             _text = Regex.Replace(_text, "([0-9][а-яА-Я])", "");//Remove chapter number (for vk)
-            _text = Regex.Replace(_text, "[a-zA-Z]|[0-9]", "");
+            _text = Regex.Replace(_text, RegexHelper.RemoveAllLatinExcept(settings.CharsToSkip), "");
             _text = Regex.Replace(_text, @"/\t|\n|\r", " "); // remove new line, tabulation and other literals
             //_text = _text.Replace("ъ", "");
 
             _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
             _text = Regex.Replace(_text, @"\-", "");
-            _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");
-            
+            _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");            
 
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words
         }

@@ -1,12 +1,8 @@
 ﻿using Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sklady
-{  
+{
 
     class GlobalSettings
     {
@@ -72,5 +68,9 @@ namespace Sklady
                 "№"
             };
 
+        public static List<char> CharsToSkip = new List<char>()
+        {
+
+        };
     }
 }
