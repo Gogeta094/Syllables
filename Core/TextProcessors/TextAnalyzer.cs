@@ -70,7 +70,7 @@ namespace Sklady
             //_text = _text.Replace("ъ", "");
 
             _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
-            _text = Regex.Replace(_text, @"\-", "");
+            //_text = Regex.Replace(_text, @"\-", "");
             _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");            
 
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words

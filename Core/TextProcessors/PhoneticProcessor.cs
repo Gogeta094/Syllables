@@ -97,7 +97,7 @@ namespace Sklady.TextProcessors
 
             while (indexofChar != -1)
             {
-                if (indexofChar == 0 || !CharactersTable.isConsonant(input[indexofChar - 1]))
+                if (indexofChar == 0 || !CharactersTable.isConsonant(input[indexofChar - 1]) || CharactersTable.Get(input[indexofChar - 1]).Power == 0)
                 {
                     input = input.Remove(indexofChar, 1).Insert(indexofChar, replacementText);
                 }

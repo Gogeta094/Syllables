@@ -37,6 +37,12 @@ namespace Sklady
             var currentIndex = 0;
             while (!done)
             {
+                if (syllables.Count == vowelsCount - 1) // if we already have syllables = vowels count - 1, then we can take all remaining word into the last syllable
+                {
+                    syllables.Add(word.Substring(currentIndex, word.Length - currentIndex));
+                    done = true;
+                    break;
+                }
 
                 var firstVowelIndex = chars.FindIndex(currentIndex, c => !c.IsConsonant);
                 var nextVowelIndex = chars.FindIndex(firstVowelIndex + 1, c => !c.IsConsonant);
@@ -46,6 +52,14 @@ namespace Sklady
                     syllables.Add(word);
                     break;
                 }
+
+                var indexOfDash = word.Substring(firstVowelIndex, nextVowelIndex - firstVowelIndex).IndexOf("-") ;
+                if (indexOfDash != -1)
+                {
+                    syllables.Add(word.Substring(currentIndex, indexOfDash + firstVowelIndex - currentIndex));
+                    currentIndex = indexOfDash + firstVowelIndex + 1;
+                    continue;
+                }                
 
                 var distance = nextVowelIndex - firstVowelIndex;
                 var specChars = chars.GetRange(firstVowelIndex, nextVowelIndex - firstVowelIndex).Count(c => c.Power == 0);
@@ -67,9 +81,7 @@ namespace Sklady
                     {
                         syllables.Add(word.Substring(currentIndex, nextVowelIndex - 1 - currentIndex));
                         currentIndex = nextVowelIndex - 1;
-                    }
-
-                    
+                    }                    
                 }
                 else if (distance == 3) // two consonants between
                 {
@@ -120,16 +132,7 @@ namespace Sklady
                     currentIndex = syllableIndex;
                 }
 
-
-
-                if (syllables.Count == vowelsCount - 1) // if we already have syllables = vowels count - 1, then we can take all remaining word into the last syllable
-                {
-                    syllables.Add(word.Substring(currentIndex, word.Length - currentIndex));
-                    done = true;
-                }
-
             }
-
 
             return syllables.ToArray();
         }
