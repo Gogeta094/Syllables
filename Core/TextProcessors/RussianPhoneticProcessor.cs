@@ -21,6 +21,16 @@ namespace Sklady.TextProcessors
             return res;
         }
 
+        public override string ProcessNonStableCharacters(string word, bool isPhoneticsMode = true)
+        {
+            var res =  base.ProcessNonStableCharacters(word);
+
+            if (isPhoneticsMode)
+                res = Regex.Replace(res, "ь|ъ", "");
+
+            return res;
+        }
+
         private string ProcessTwoSoundingLetters(string input)
         {
             input = ReplacePhoneticCharacter('ю', "jу", input);
@@ -33,13 +43,29 @@ namespace Sklady.TextProcessors
 
             return input;
         }
+
         private string ReductionReplacements(string res)
         {
             res = Regex.Replace(res, "стьд", "зд");
-            res = Regex.Replace(res, "нде", "не");
+            res = Regex.Replace(res, "вств", "ств");
+            res = Regex.Replace(res, "дств", "цтв");
+            res = Regex.Replace(res, "тств", "цтв");
+            res = Regex.Replace(res, "дск", "цк");
+            res = Regex.Replace(res, "здч", "шч");
+            res = Regex.Replace(res, "здц", "зц");
+            res = Regex.Replace(res, "лнц", "нц");
+            res = Regex.Replace(res, "ндс", "нс");
+            res = Regex.Replace(res, "нтс", "нц");
+            res = Regex.Replace(res, "нтц", "нц");
+            res = Regex.Replace(res, "рдч", "рц");
+            res = Regex.Replace(res, "рдц", "рц");            
             res = Regex.Replace(res, "зсс", "сс");
             res = Regex.Replace(res, "стл", "сл");
             res = Regex.Replace(res, "стн", "сн");
+            res = Regex.Replace(res, "стс", "сс");
+            res = Regex.Replace(res, "стч", "шш");
+            res = Regex.Replace(res, "стц", "сц");
+            res = Regex.Replace(res, "тск", "цк");            
 
             return res;
         }

@@ -37,10 +37,13 @@ namespace Sklady.TextProcessors
                        .Replace("Y", "й");
         }
 
-        public override string ProcessNonStableCharacters(string word)
+        public override string ProcessNonStableCharacters(string word, bool isPhoneticsMode = true)
         {
             var res = base.ProcessNonStableCharacters(word);
             res = ProcessV(res);
+
+            if (isPhoneticsMode)
+                res = Regex.Replace(res, "ь", "");
 
             return res;
         }

@@ -157,13 +157,7 @@ namespace Sklady.Export
                     var HalfCharsCount = item.Syllables[i].Count(c => c == 'Y' || c == 'u');
 
                     CCount += item.Syllables[i].Count(c => _charactersTable.isConsonant(c)) - 0.5 * HalfCharsCount; // as we're counting Y as 0.5V 
-                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * HalfCharsCount; // and 0.5C we have to make corresponding calculations
-
-                    if (_useAbsoluteValues)
-                    {
-                        CCount = CCount / fileResult.TextLength;
-                        VCount = VCount / fileResult.TextLength;
-                    }
+                    VCount += item.Syllables[i].Count(c => !_charactersTable.isConsonant(c)) + 0.5 * HalfCharsCount; // and 0.5C we have to make corresponding calculations                   
 
                     if (_charactersTable.isConsonant(item.Syllables[i].Last()))
                     {
@@ -176,17 +170,25 @@ namespace Sklady.Export
                 }
             }
 
+            if (!_useAbsoluteValues)
+            {
+                CCount = CCount / fileResult.TextLength;
+                VCount = VCount / fileResult.TextLength;
+            }
+
             var CtoV = CCount / VCount;
+
             openSyllables = openSyllables / fileResult.SyllablesCount;
             closedSyllables = closedSyllables / fileResult.SyllablesCount;
+            var openToClosed = openSyllables / closedSyllables;
 
-            return new List<double>() { CCount, VCount, CtoV, openSyllables, closedSyllables };
+            return new List<double>() { CCount, VCount, CtoV, openSyllables, closedSyllables, openToClosed };
         }       
 
         private List<string> GenerateTableHeader()
         {
             var res = new List<string>();
-            res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V", "Opened", "Closed" });
+            res.AddRange(new string[] { "Text", "Length", "SyllablesCount", "Total C", "Total V", "C/V", "Opened", "Closed", "Opened/Closed" });
             res.AddRange(_cvvHeaders);
             res.AddRange(_repetitionsHeaders);
             res.AddRange(_lettersHeaders.Select(c => c.ToString()));

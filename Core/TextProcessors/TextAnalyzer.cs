@@ -67,11 +67,9 @@ namespace Sklady
             _text = Regex.Replace(_text, "([0-9][а-яА-Я])", "");//Remove chapter number (for vk)
             _text = Regex.Replace(_text, RegexHelper.RemoveAllLatinExcept(settings.CharsToSkip), "");
             _text = Regex.Replace(_text, @"/\t|\n|\r", " "); // remove new line, tabulation and other literals
-            //_text = _text.Replace("ъ", "");
 
-            _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations
-            //_text = Regex.Replace(_text, @"\-", "");
-            _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");            
+            _text = Regex.Replace(_text, @"(\- )", ""); // Handle word hyphenations            
+            _text = Regex.Replace(_text, @"и́| ̀и|ù|ѝ̀̀| ̀̀и|ѝ|́и", "й");
 
             _words = _text.Split(new[] { " ", " " }, StringSplitOptions.RemoveEmptyEntries).ToArray(); // Split text by words
         }
@@ -89,11 +87,15 @@ namespace Sklady
                     if (settings.PhoneticsMode)
                         _words[i] = _phoneticProcessor.Process(_words[i]); // In case of phonetics mode make corresponding replacements
 
-                    _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i]); // Replace some chars according to their power
+                    _words[i] = _phoneticProcessor.ProcessNonStableCharacters(_words[i], settings.PhoneticsMode); // Replace some chars according to their power
 
                     UpdateLetters(result.Letters, _words[i]);
 
-                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();                    
+                    var syllables = _wordAnalyzer.GetSyllables(_words[i]).ToArray();
+
+                    if (settings.PhoneticsMode)                    
+                        syllables = RemoveApos(syllables); 
+                    
 
                     result.CvvResults.Add(new AnalyzeResults()
                     {
@@ -125,21 +127,38 @@ namespace Sklady
             _stopWatch.Start();           
             for (var i = 0; i < word.Length; i++)
             {                
-                if (word[i] == '\'')
+                if (word[i] == '\'' || word[i] == '-')
                 {
                     continue;
                 }
 
-                if (letters.ContainsKey(word[i]))
+                var key = GetKeyForLetter(word[i]);
+
+                if (letters.ContainsKey(key))
                 {
-                    letters[word[i]] += 1;
+                    letters[key] += 1;
                 }
                 else
                 {
-                    letters[word[i]] = 1;
+                    letters[key] = 1;
                 }
             }
             _stopWatch.Stop();
+        }
+
+        private char GetKeyForLetter(char letter)
+        {
+            var predefinedPairs = new Dictionary<char, char>();
+            predefinedPairs.Add('я', 'а');
+            predefinedPairs.Add('є', 'е');
+            predefinedPairs.Add('ю', 'у');
+            predefinedPairs.Add('ї', 'і');
+            predefinedPairs.Add('ё', 'о');
+
+            if (settings.Language == Languages.Russian)
+                predefinedPairs.Add('е', 'э');
+
+            return predefinedPairs.ContainsKey(letter) ? predefinedPairs[letter] : letter;
         }
 
         private void UpdateRepetitions(Dictionary<string, int> repetitions, string word)
