@@ -32,7 +32,7 @@ namespace Sklady
         private void button1_Click(object sender, EventArgs e)
         {
             GlobalSettings.SyllableSeparator = tbSeparator.Text;
-            GlobalSettings.SeparateAfterFirst = cbSeparationMode.SelectedText.Equals("c-cc");
+            GlobalSettings.SeparateAfterFirst = cbSeparationMode.SelectedIndex == 0;
             GlobalSettings.CharactersTable.SelectedTable = (Table) cbCharactersTable.SelectedIndex;
             GlobalSettings.PhoneticsMode = cbPhoneticsMode.Checked;
             GlobalSettings.Language = (Languages)cbbLanguage.SelectedIndex;
