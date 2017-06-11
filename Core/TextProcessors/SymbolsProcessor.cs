@@ -61,7 +61,8 @@ namespace Core.TextProcessors
                 }
             }
 
-            res.Letters = letters;            
+            res.Letters = letters;
+            res.FileName = this.FileName;
 
             return res;
         }

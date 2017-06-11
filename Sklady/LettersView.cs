@@ -95,6 +95,7 @@ namespace Sklady
                     Parallel.ForEach(symbolProcessors, symbolProcessor =>
                     {
                         var res = symbolProcessor.GetResults();
+                        
                         fileProcessingResults.Add(res);
 
                         UpdateMainProgressBar(symbolProcessors.Count);                        

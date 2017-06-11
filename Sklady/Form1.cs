@@ -24,7 +24,7 @@ namespace Sklady
         private void LettersView1_OnFilesProcessed(ExportResults result)
         {
             _exportResults = result;
-            UpdateSaveButton(result.FileExportResults);
+            UpdateSaveButton();
         }
 
         private ExportResults _exportResults;
@@ -32,7 +32,7 @@ namespace Sklady
         private void MainView1_OnFilesProcessed1(ExportResults result)
         {
             _exportResults = result;
-            UpdateSaveButton(result.FileExportResults);
+            UpdateSaveButton();
         }       
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -157,18 +157,18 @@ namespace Sklady
             form.ShowDialog();
         }
 
-        private void UpdateSaveButton(List<FileExportResults> results)
+        private void UpdateSaveButton()
         {
             if (menuStrip1.InvokeRequired)
             {
                 menuStrip1.Invoke((MethodInvoker)delegate ()
                {
-                   saveToolStripMenuItem.Enabled = results.Any();
+                   saveToolStripMenuItem.Enabled = !String.IsNullOrEmpty(_exportResults.StatisticsTableCsv);
                });
             }
             else
             {
-                saveToolStripMenuItem.Enabled = results.Any();
+                saveToolStripMenuItem.Enabled = !String.IsNullOrEmpty(_exportResults.StatisticsTableCsv);
             }
         }
 
