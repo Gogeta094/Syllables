@@ -15,5 +15,7 @@ namespace Sklady.Export
 
         public List<FileExportResults> FileExportResults { get; set; }
         public string StatisticsTableCsv { get; set; }
+
+        public bool FullResults { get; set; }
     }
 }

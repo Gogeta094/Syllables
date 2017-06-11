@@ -111,5 +111,10 @@ namespace Sklady.Export
         {
             return _statisticsTableGenerator.GetTableString(fileProcessingResults);           
         }       
+
+        public string GetLettersStatisticsTableCsv(List<FileProcessingResult> fileProcessingResults)
+        {
+            return _statisticsTableGenerator.GetLettersTableString(fileProcessingResults);
+        }
     }
 }

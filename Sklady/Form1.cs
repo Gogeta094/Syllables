@@ -18,6 +18,13 @@ namespace Sklady
         {
             InitializeComponent();
             mainView1.OnFilesProcessed += MainView1_OnFilesProcessed1;
+            lettersView1.OnFilesProcessed += LettersView1_OnFilesProcessed;
+        }
+
+        private void LettersView1_OnFilesProcessed(ExportResults result)
+        {
+            _exportResults = result;
+            UpdateSaveButton(result.FileExportResults);
         }
 
         private ExportResults _exportResults;
@@ -52,12 +59,39 @@ namespace Sklady
                 }
 
                 mainView1.InputData = texts;
+                lettersView1.InputData = texts;
             }
 
             GlobalSettings.LastOpenFolderPath = dialog.SelectedPath;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_exportResults.FullResults)
+            {
+                SaveFullResults();
+            }
+            else
+            {
+                SaveLettersResults();
+            }
+        }
+
+        private void SaveLettersResults()
+        {
+            var folderDialog = new FolderBrowserDialog();
+            folderDialog.Description = "Save results to folder.";
+            folderDialog.SelectedPath = GlobalSettings.LastSaveFolderPath;
+
+            if (folderDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveCvv(_exportResults.StatisticsTableCsv, folderDialog.SelectedPath);
+            }
+
+            GlobalSettings.LastSaveFolderPath = folderDialog.SelectedPath;
+        }
+
+        private void SaveFullResults()
         {
             const string SyllablesFolderName = "Syllables";
             const string FirstSyllablesFolderName = "FirstSyllables";

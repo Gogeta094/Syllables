@@ -22,7 +22,7 @@ namespace Sklady
         }
 
         public event Action<ExportResults> OnFilesProcessed;
-        private const int UPDATE_UI_EVERY_N_ITEMS = 2000;
+        private const int UPDATE_UI_EVERY_N_ITEMS = 10000;
 
         private CharactersTable charsTable = GlobalSettings.CharactersTable;
         private ResultsExporter _export; 
@@ -78,8 +78,7 @@ namespace Sklady
             {
                 var symbolProcessor = new SymbolsProcessor(settings, InputData[i].Text, InputData[i].FileName);
 
-                //textAnalyzer.OnWordAnalyzed += Analyzer_OnWordAnalyzed;
-                //textAnalyzer.OnErrorOccured += Analyzer_OnErrorOccured;
+                symbolProcessor.OnLetterAnalyzed += Analyzer_OnWordAnalyzed;                
 
                 symbolProcessors.Add(symbolProcessor);
             }
@@ -88,52 +87,31 @@ namespace Sklady
 
             var exportResult = new ExportResults();
             var fileProcessingResults = new List<FileProcessingResult>();
-
+            
             var task = Task.Factory.StartNew(() =>
             {
-                Parallel.ForEach(symbolProcessors, textAnalyzer =>
+                try
                 {
-                    var res = textAnalyzer.GetResults();
-                    fileProcessingResults.Add(res);
-                    
-                    UpdateProcessingPanel(true);
-                  
-                    exportResult.FileExportResults.Add(new FileExportResults()
+                    Parallel.ForEach(symbolProcessors, symbolProcessor =>
                     {
-                        Syllables = _export.GetSyllables(res.ReadableResults),
-                        FirstSyllables = _export.GetFirstSyllables(res.ReadableResults),
-                        SyllablesCVV = _export.GetSyllablesCVV(res.CvvResults),
-                        SyllablesFirstCVV = _export.GetSyllablesFirstCVV(res.CvvResults),
-                        FileName = textAnalyzer.FileName
+                        var res = symbolProcessor.GetResults();
+                        fileProcessingResults.Add(res);
+
+                        UpdateMainProgressBar(symbolProcessors.Count);                        
                     });
-                    UpdateMainProgressBar(analyzers.Count);
-                });
 
-                exportResult.StatisticsTableCsv = _export.GetStatisticsTableCsv(fileProcessingResults);
-
-                UpdateProcessingPanel(false);
+                    exportResult.StatisticsTableCsv = _export.GetLettersStatisticsTableCsv(fileProcessingResults);
+                }
+                catch (Exception ex)
+                {
+                    OnError(ex);
+                }
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResult);
-            });         
-
-            
+            });
         }
-
-        private void UpdateProcessingPanel(bool visible)
-        {
-            if (processingPanel.InvokeRequired)
-            {
-                processingPanel.Invoke((MethodInvoker)delegate ()
-                {
-                    processingPanel.Visible = visible;
-                });
-            }
-            else
-            {
-                processingPanel.Visible = visible;
-            }
-        }
+        
 
         private void OnFileProcessed()
         {
@@ -190,6 +168,22 @@ namespace Sklady
                 richTextBox1.Text += String.Format("{0} Error occured processing next word - {1}\n", file, word);
             }
         }
+
+        private void OnError(Exception arg1)
+        {
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.BeginInvoke((MethodInvoker)delegate ()
+                {                    
+                    richTextBox1.Text += arg1.ToString();
+                });
+            }
+            else
+            {                
+                richTextBox1.Text += arg1.ToString();
+            }
+        }
+
 
         private void Analyzer_OnWordAnalyzed(int current, int total, string fileName)
         {

@@ -57,7 +57,41 @@ namespace Sklady.Export
             sb.AppendLine(String.Format("{0}\t{1}", "Avg Square Delta", String.Join(_separator, weightedDelta)));
 
             return sb.ToString();
-        }       
+        } 
+
+        public string GetLettersTableString(List<FileProcessingResult> results)
+        {
+            var sb = new StringBuilder();
+            ProcessLettersHeaders(results);
+            var headerItems = _lettersHeaders.Select(c => c.ToString()).ToList();
+            headerItems.Insert(0, "Length");
+            headerItems.Insert(0, "Text");
+
+            sb.AppendLine(String.Join(_separator, headerItems));
+
+            var filesStatistics = new List<List<double>>();
+
+            foreach (var resItem in results)
+            {
+                var fileStatistics = CalculateStatisticsItem(resItem.Letters, _lettersHeaders);
+                fileStatistics.Insert(0, resItem.TextLength);
+                
+                filesStatistics.Add(fileStatistics);
+
+                sb.AppendLine(String.Format("{0}\t{1}", resItem.FileName, String.Join(_separator, fileStatistics)));
+            }
+
+            var groupedStatistics = GroupByMeasure(filesStatistics);
+            _statisticsCalculator = new StatisticsCalculator(groupedStatistics[0]); // at 0 position we have list of file lengths
+
+            var avg = groupedStatistics.Select(c => String.Format("{0}", _statisticsCalculator.GetWeightedAvarage(c)));
+            sb.AppendLine(String.Format("{0}\t{1}", "Average", String.Join(_separator, avg)));
+
+            var weightedDelta = groupedStatistics.Select(c => String.Format("{0}", _statisticsCalculator.GetWeightedDelta(c)));
+            sb.AppendLine(String.Format("{0}\t{1}", "Avg Square Delta", String.Join(_separator, weightedDelta)));
+
+            return sb.ToString();
+        }
 
         private List<List<double>> GroupByMeasure(List<List<double>> fileStatistics)
         {
@@ -142,6 +176,24 @@ namespace Sklady.Export
 
             return res;
         }       
+
+        public List<double> CalculateStatisticsItem<T>(Dictionary<T, int> dict, List<T> headers)
+        {
+            var res = new List<double>();
+            foreach (var header in headers)
+            {
+                if (dict.ContainsKey(header))
+                {
+                    res.Add(dict[header]);
+                }
+                else
+                {
+                    res.Add(0);
+                }
+            }
+
+            return res;
+        }
 
         private List<double> GetCVCounts(FileProcessingResult fileResult)
         {

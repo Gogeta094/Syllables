@@ -59,6 +59,7 @@
     <Compile Include="TextProcessors\CharactersPowerTable.cs" />
     <Compile Include="TextProcessors\PhoneticProcessor.cs" />
     <Compile Include="TextProcessors\RussianPhoneticProcessor.cs" />
+    <Compile Include="TextProcessors\SymbolsProcessor.cs" />
     <Compile Include="TextProcessors\TextAnalyzer.cs" />
     <Compile Include="TextProcessors\UkrainePhoneticProcessor.cs" />
     <Compile Include="TextProcessors\WordAnalyzer.cs" />

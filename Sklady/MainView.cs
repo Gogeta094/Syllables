@@ -109,13 +109,13 @@ namespace Sklady
                 });
 
                 exportResult.StatisticsTableCsv = _export.GetStatisticsTableCsv(fileProcessingResults);
+                exportResult.FullResults = true;
 
                 UpdateProcessingPanel(false);
 
                 if (OnFilesProcessed != null)
                     OnFilesProcessed(exportResult);
-            });         
-
+            }); 
             
         }
 
