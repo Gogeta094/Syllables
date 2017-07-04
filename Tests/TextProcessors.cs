@@ -62,7 +62,7 @@ namespace Tests
 
             analyzer = new TextAnalyzer("свалява", "", settings, export);
             res = analyzer.GetResults();
-            Assert.AreEqual("сwа-ля-ва", export.GetSyllables(res.ReadableResults));
+            Assert.AreEqual("сwа-ля-vа", export.GetSyllables(res.ReadableResults));
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace Tests
             var analyzer = new TextAnalyzer("вирісши", "", settings, export);
             var res = analyzer.GetResults();
 
-            Assert.AreEqual("ви-рі-ши", export.GetSyllables(res.ReadableResults));
+            Assert.AreEqual("vи-рі-ши", export.GetSyllables(res.ReadableResults));
         }
     }
 }
