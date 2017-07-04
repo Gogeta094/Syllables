@@ -24,9 +24,14 @@ namespace Sklady.TextProcessors
         public override string ProcessNonStableCharacters(string word, bool isPhoneticsMode = true)
         {
             var res =  base.ProcessNonStableCharacters(word);
+            res = Regex.Replace(res, "в", "v");
 
             if (isPhoneticsMode)
+            {
                 res = Regex.Replace(res, "ь|ъ", "");
+                res = Regex.Replace(res, "э", "е");
+                res = Regex.Replace(res, "ё", "о");
+            }
 
             return res;
         }

@@ -132,7 +132,7 @@ namespace Sklady
                     continue;
                 }
 
-                var key = GetKeyForLetter(word[i]);
+                var key = word[i]; //GetKeyForLetter(word[i]);
 
                 if (letters.ContainsKey(key))
                 {

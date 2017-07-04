@@ -24,6 +24,10 @@ namespace Sklady.TextProcessors
             word = ProcessJ(word);
             //word = word.Replace("дж", "d");
             word = ReplaceNextNonStableChar("'", word); // Replace vowel after apos
+            word = Regex.Replace(word, "я", "а");
+            word = Regex.Replace(word, "ю", "у");
+            word = Regex.Replace(word, "є", "е");
+            word = Regex.Replace(word, "ї", "і");
 
             return word;
         }
